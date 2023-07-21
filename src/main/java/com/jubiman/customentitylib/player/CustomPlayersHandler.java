@@ -19,7 +19,7 @@ import java.util.Set;
  * Handler for handling custom players in your mod
  * @param <T> your CustomPlayer class
  */
-public abstract class CustomPlayersHandler<T extends CustomEntity> {
+public abstract class CustomPlayersHandler<T extends CustomPlayer> {
 	private final HashMap<Long, T> userMap = new HashMap<>();
 	private final Constructor<T> ctor;
 	/**

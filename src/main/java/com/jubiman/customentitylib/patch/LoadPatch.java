@@ -1,6 +1,7 @@
 package com.jubiman.customentitylib.patch;
 
 import com.jubiman.customentitylib.CustomEntityRegistry;
+import com.jubiman.customentitylib.player.CustomPlayerRegistry;
 import necesse.engine.modLoader.annotations.ModMethodPatch;
 import necesse.engine.network.server.ServerClient;
 import necesse.engine.save.LoadData;
@@ -14,7 +15,7 @@ public class LoadPatch {
 	@Advice.OnMethodEnter
 	static void onEnter(@Advice.Argument(0) LoadData loadData) {
 		try {
-			CustomEntityRegistry.loadAllEnter(loadData);
+			CustomPlayerRegistry.loadAllEnter(loadData);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -23,7 +24,7 @@ public class LoadPatch {
 	@Advice.OnMethodExit
 	static void onExit(@Advice.Argument(0) LoadData loadData) {
 		try {
-			CustomEntityRegistry.loadAllExit(loadData);
+			CustomPlayerRegistry.loadAllExit(loadData);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

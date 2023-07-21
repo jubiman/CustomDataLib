@@ -8,7 +8,7 @@ import necesse.engine.network.server.Server;
 /**
  * The tickable variant of a CustomPlayer. Ticks are automatically called, no need for patches
  */
-public abstract class CustomPlayerTickable extends CustomEntity implements ITickable {
+public abstract class CustomPlayerTickable extends CustomPlayer implements ITickable {
 	/**
 	 * Creates new tickable CustomPlayer
 	 * @param auth the authentication of the player
