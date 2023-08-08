@@ -1,4 +1,4 @@
-package com.jubiman.customentitylib;
+package com.jubiman.customentitylib.entity;
 
 import necesse.engine.save.LoadData;
 import necesse.engine.save.SaveData;
@@ -6,6 +6,7 @@ import necesse.engine.save.SaveData;
 /**
  * The instance of each individual entity containing custom data
  */
+@Deprecated // possibly
 public abstract class CustomEntity {
 	/**
 	 * The ID of the entity, used to access this object in the CustomPlayers registry

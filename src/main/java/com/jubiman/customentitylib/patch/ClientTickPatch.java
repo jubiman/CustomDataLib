@@ -1,5 +1,6 @@
 package com.jubiman.customentitylib.patch;
 
+import com.jubiman.customentitylib.environment.ClientEnvironment;
 import com.jubiman.customentitylib.player.CustomPlayerRegistry;
 import necesse.engine.modLoader.annotations.ModMethodPatch;
 import necesse.engine.network.client.Client;
@@ -13,8 +14,6 @@ import net.bytebuddy.asm.Advice;
 public class ClientTickPatch {
 	@Advice.OnMethodExit
 	static void onExit(@Advice.This Client client) {
-		ClientClient clientClient = client.getClient();
-		if (clientClient != null)
-			CustomPlayerRegistry.clientTickAll(client);
+		ClientEnvironment.clientTickAll(client);
 	}
 }

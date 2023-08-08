@@ -1,74 +1,40 @@
 package com.jubiman.customentitylib.player;
 
-import com.jubiman.customentitylib.CustomEntity;
+import com.jubiman.customentitylib.api.CustomDataHandler;
+import com.jubiman.customentitylib.api.Savable;
 import necesse.engine.GameEventListener;
 import necesse.engine.GameEvents;
 import necesse.engine.events.ServerClientDisconnectEvent;
 import necesse.engine.events.ServerStopEvent;
-import necesse.engine.network.server.ServerClient;
+import necesse.engine.network.server.Server;
 import necesse.engine.save.LoadData;
 import necesse.engine.save.SaveData;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Set;
 
 /**
  * Handler for handling custom players in your mod
  * @param <T> your CustomPlayer class
  */
-public abstract class CustomPlayersHandler<T extends CustomPlayer> {
-	private final HashMap<Long, T> userMap = new HashMap<>();
-	private final Constructor<T> ctor;
-	/**
-	 * The name of the handler (usually tied to the mod name)
-	 */
-	protected final String name;
-
+public abstract class CustomPlayersHandler<T extends CustomPlayer> extends CustomDataHandler<Long, T> {
 	/**
 	 * Constructs the storage class for custom players
 	 *
 	 * @param clazz the class extending CustomPlayer
-	 * @param name the name of the class, used for creating a save component
+	 * @param identifier the name of the class, used for creating a save component
 	 */
-	public CustomPlayersHandler(Class<T> clazz, String name) {
-		this.name = name;
-		try {
-			this.ctor = clazz.getConstructor(long.class);
-		} catch (NoSuchMethodException e) {
-			throw new RuntimeException(e);
-		}
-
-		// Initialize event listener for ServerStopEvents, no need to call super when overwriting.
-		GameEvents.addListener(ServerStopEvent.class, new GameEventListener<ServerStopEvent>() {
-			@Override
-			public void onEvent(ServerStopEvent e) {
-				stop();
-			}
-		});
-		GameEvents.addListener(ServerClientDisconnectEvent.class, new GameEventListener<ServerClientDisconnectEvent>() {
-			@Override
-			public void onEvent(ServerClientDisconnectEvent e) {
-				userMap.remove(e.client.authentication);
-			}
-		});
+	public CustomPlayersHandler(Class<T> clazz, String identifier) {
+		super(clazz, new Class[]{long.class}, identifier);
 	}
 
 	/**
-	 * A null safe way to get a player from the map, adds player if they don't exist yet
-	 * @param auth the authentication of the player's ServerClient
-	 * @return the object belonging to the player
+	 * Creates a new instance of the custom player
+	 * @return the new custom player instance
 	 */
-	public T get(long auth) {
-		try {
-			if (!userMap.containsKey(auth))
-				userMap.put(auth, ctor.newInstance(auth));
-		} catch (InvocationTargetException | InstantiationException | IllegalAccessException e) { // should only happen when people develop
-			throw new RuntimeException(e);
-		}
-		return userMap.get(auth);
+	public T createNew() throws InvocationTargetException, InstantiationException, IllegalAccessException {
+		return ctor.newInstance();
 	}
 
 	/**
@@ -80,40 +46,50 @@ public abstract class CustomPlayersHandler<T extends CustomPlayer> {
 	}
 
 	/**
-	 * Iterate through the values.
+	 * Returns the values
 	 * @return a collection of all values (all CustomPlayers)
 	 */
-	public Collection<T> valueIterator() {
+	public Collection<T> values() {
 		return userMap.values();
 	}
 
 	/**
 	 * Save player's data.
 	 * @param saveData the parent save object (usually ServerClient)
-	 * @param player the player to save
+	 * @param authentication the authentication of the player to save
 	 */
-	public void save(SaveData saveData, ServerClient player) {
-		SaveData save = new SaveData(name);
-		get(player.authentication).addSaveData(save);
+	@Override
+	public void save(SaveData saveData, Long authentication) {
+		T p = get(authentication);
+		if (!(p instanceof Savable)) return;
+
+		SaveData save = new SaveData(handlerName);
+		((Savable) p).addSaveData(save);
 		saveData.addSaveData(save);
 	}
 
 	/**
 	 * Load player from saved data. Gets called before the rest of the player is loaded.
 	 * @param loadData data to load from (should be the same as where you save, usually ServerClient)
+	 * @param auth the authentication of the player to load
 	 */
-	public void loadEnter(LoadData loadData) {
+	public void loadEnter(LoadData loadData, long auth) {
 		LoadData data = loadData.getLoadData().get(0);
-		get(Long.parseLong(data.getName())).loadEnter(data);
+		T p = get(auth);
+		if (p instanceof Savable) // TODO: should always be true
+			((Savable) p).loadEnter(data);
 	}
 
 	/**
 	 * Load player from saved data. Gets called after the rest of the player is loaded.
 	 * @param loadData data to load from (should be the same as where you save, usually ServerClient)
+	 * @param auth the authentication of the player to load
 	 */
-	public void loadExit(LoadData loadData) {
+	public void loadExit(LoadData loadData, long auth) {
 		LoadData data = loadData.getLoadData().get(0);
-		get(Long.parseLong(data.getName())).loadExit(data);
+		T p = get(auth);
+		if (p instanceof Savable)
+			((Savable) p).loadExit(data);
 	}
 
 	/**
@@ -121,5 +97,20 @@ public abstract class CustomPlayersHandler<T extends CustomPlayer> {
 	 */
 	public void stop() {
 		userMap.clear(); // avoid overwriting other worlds
+	}
+
+	/**
+	 * Removes a player from the map
+	 * @param authentication the authentication of the player to remove
+	 */
+	public void remove(long authentication) {
+		userMap.remove(authentication);
+	}
+
+	/**
+	 * Called every tick on the server. Override this to add your own logic.
+	 * @param server the server instance
+	 */
+	public void serverTick(Server server) {
 	}
 }
