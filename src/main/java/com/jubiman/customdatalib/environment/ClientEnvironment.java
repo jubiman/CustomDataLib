@@ -9,7 +9,7 @@ import necesse.engine.network.client.Client;
 import necesse.engine.tickManager.TickManager;
 import necesse.entity.mobs.PlayerMob;
 
-import java.awt.Rectangle;
+import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -24,13 +24,12 @@ public class ClientEnvironment {
 	 */
 	private static final HashMap<String, CustomData> customDataHashMap = new HashMap<>();
 	private static final HashMap<String, Function<Long, ? extends CustomPlayer>> registeredPlayers = new HashMap<>();
-	// TODO: create a way for people to register a client side tick
-	// TODO: maybe test with the mana bar? might be nice to have the mana cached on the client so you dont have to spam packets
 
 	/**
 	 * Registers a CustomPlayer to the client-side registry
+	 *
 	 * @param modName the mod name of the CustomPlayer
-	 * @param ctor the constructor of the CustomPlayer to register
+	 * @param ctor    the constructor of the CustomPlayer to register
 	 */
 	public static void registerCustomPlayer(String modName, Function<Long, ? extends CustomPlayer> ctor) {
 		GameLog.debug.println("Registering client-side CustomPlayer for: " + modName);
@@ -39,6 +38,7 @@ public class ClientEnvironment {
 
 	/**
 	 * Client ticks all registered CustomPlayers. Please do not call this function as it's called every tick when Necesse's client ticks.
+	 *
 	 * @param client the client to tick from
 	 */
 	public static void clientTickAll(Client client) {
@@ -50,9 +50,10 @@ public class ClientEnvironment {
 
 	/**
 	 * Draws all registered CustomPlayers' HUDs. Please do not call this function as it's called every tick when Necesse's HUD gets drawn.
+	 *
 	 * @param tickManager the tickManager to draw from
-	 * @param player the player to draw on
-	 * @param renderBox the renderBox to draw on
+	 * @param player      the player to draw on
+	 * @param renderBox   the renderBox to draw on
 	 */
 	public static void hudDrawAll(TickManager tickManager, PlayerMob player, Rectangle renderBox) {
 		for (CustomData cd : customDataHashMap.values())
@@ -62,6 +63,7 @@ public class ClientEnvironment {
 
 	/**
 	 * Creates a player for all registered CustomPlayers. Please do not call this function as it's called when Necesse's client gets created.
+	 *
 	 * @param auth the authentication of the player to create
 	 */
 	static void createPlayers(long auth) {

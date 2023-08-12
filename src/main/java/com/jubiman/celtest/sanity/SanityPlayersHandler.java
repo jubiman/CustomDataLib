@@ -19,6 +19,7 @@ public class SanityPlayersHandler extends CustomPlayersHandler<SanityPlayer> {
 
 	/**
 	 * A null safe way to get a player from the map, adds player if they don't exist yet
+	 *
 	 * @param auth the authentication of the player's ServerClient
 	 * @return the SanityPlayer object belonging to the player
 	 */

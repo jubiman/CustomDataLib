@@ -50,8 +50,9 @@ public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
 
 	/**
 	 * Register a new CustomPlayersHandler class. Used by individual mods
+	 *
 	 * @param identifier the name of the class
-	 * @param clazz a reference to the class
+	 * @param clazz      a reference to the class
 	 */
 	public static void registerClass(String identifier, Class<? extends CustomPlayersHandler<?>> clazz) {
 		try {
@@ -64,8 +65,20 @@ public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
 	}
 
 	/**
+	 * Server ticks all registered CustomPlayers. Please do not call this function as it's called every tick when Necesse's server ticks.
+	 *
+	 * @param server the server to tick from
+	 */
+	public static void serverTickAll(Server server) {
+		for (CustomDataHandler<Long, ? extends CustomData> cps : INSTANCE.registry.values()) {
+			((CustomPlayersHandler<? extends CustomPlayer>) cps).serverTick(server);
+		}
+	}
+
+	/**
 	 * Saves player data from all registered CustomPlayers classes
-	 * @param save the SaveData to save to
+	 *
+	 * @param save           the SaveData to save to
 	 * @param authentication the authentication of the player to save
 	 */
 	public void saveAll(SaveData save, Object authentication) {
@@ -78,6 +91,7 @@ public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
 
 	/**
 	 * Loads all registered CustomPlayers, is called before the rest of the player is loaded
+	 *
 	 * @param data the LoadData to load from
 	 */
 	public void loadAllEnter(LoadData data, long authentication) {
@@ -88,22 +102,13 @@ public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
 
 	/**
 	 * Loads all registered CustomPlayers, is called after the rest of the player is loaded
+	 *
 	 * @param data the LoadData to load from
 	 */
 	public void loadAllExit(LoadData data, long authentication) {
 		LoadData playerData = data.getFirstLoadDataByName("CustomPlayerData");
 		for (Map.Entry<String, CustomDataHandler<Long, ? extends CustomData>> entry : registry.entrySet())
 			((CustomPlayersHandler<? extends CustomPlayer>) entry.getValue()).loadExit(playerData.getFirstLoadDataByName(entry.getKey()), authentication);
-	}
-
-	/**
-	 * Server ticks all registered CustomPlayers. Please do not call this function as it's called every tick when Necesse's server ticks.
-	 * @param server the server to tick from
-	 */
-	public static void serverTickAll(Server server) {
-		for (CustomDataHandler<Long, ? extends CustomData> cps : INSTANCE.registry.values()) {
-				((CustomPlayersHandler<? extends CustomPlayer>) cps).serverTick(server);
-		}
 	}
 
 	/**

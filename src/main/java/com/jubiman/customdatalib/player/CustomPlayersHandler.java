@@ -9,13 +9,14 @@ import necesse.engine.save.SaveData;
 
 /**
  * Handler for handling custom players in your mod
+ *
  * @param <T> your CustomPlayer class
  */
 public abstract class CustomPlayersHandler<T extends CustomPlayer> extends CustomDataHandler<Long, T> {
 	/**
 	 * Constructs the storage class for custom players
 	 *
-	 * @param clazz the class extending CustomPlayer
+	 * @param clazz      the class extending CustomPlayer
 	 * @param identifier the name of the class, used for creating a save component
 	 */
 	public CustomPlayersHandler(Class<T> clazz, String identifier) {
@@ -24,7 +25,8 @@ public abstract class CustomPlayersHandler<T extends CustomPlayer> extends Custo
 
 	/**
 	 * Save players' data.
-	 * @param saveData the parent save object (usually ServerClient)
+	 *
+	 * @param saveData       the parent save object (usually ServerClient)
 	 * @param authentication the authentication of the player to save
 	 */
 	@Override
@@ -39,19 +41,21 @@ public abstract class CustomPlayersHandler<T extends CustomPlayer> extends Custo
 
 	/**
 	 * Load player from saved data. Gets called before the rest of the player is loaded.
+	 *
 	 * @param loadData data to load from (should be the same as where you save, usually ServerClient)
-	 * @param auth the authentication of the player to load
+	 * @param auth     the authentication of the player to load
 	 */
 	public void loadEnter(LoadData loadData, long auth) {
 		T p = get(auth);
-		if (p instanceof Savable) // TODO: should always be true
+		if (p instanceof Savable) // TODO: should always be true?
 			((Savable) p).loadEnter(loadData);
 	}
 
 	/**
 	 * Load player from saved data. Gets called after the rest of the player is loaded.
+	 *
 	 * @param loadData data to load from (should be the same as where you save, usually ServerClient)
-	 * @param auth the authentication of the player to load
+	 * @param auth     the authentication of the player to load
 	 */
 	public void loadExit(LoadData loadData, long auth) {
 		T p = get(auth);
@@ -68,6 +72,7 @@ public abstract class CustomPlayersHandler<T extends CustomPlayer> extends Custo
 
 	/**
 	 * Removes a player from the map
+	 *
 	 * @param authentication the authentication of the player to remove
 	 */
 	public void remove(long authentication) {
@@ -76,6 +81,7 @@ public abstract class CustomPlayersHandler<T extends CustomPlayer> extends Custo
 
 	/**
 	 * Called every tick on the server. Override this to add your own logic.
+	 *
 	 * @param server the server instance
 	 */
 	public void serverTick(Server server) {

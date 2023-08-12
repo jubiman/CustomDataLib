@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 /**
  * Registry for CustomDataHandlers
+ *
  * @param <I> The identifier type of the CustomDataHandler (i.e. Long aka auth for players)
  */
 public abstract class CustomDataRegistry<I> {
@@ -11,6 +12,7 @@ public abstract class CustomDataRegistry<I> {
 
 	/**
 	 * Get CustomPlayers instance in registry
+	 *
 	 * @param identifier the identifier of the CustomDataHandler
 	 * @return CustomPlayers instance registered with the identifier
 	 */
@@ -22,7 +24,8 @@ public abstract class CustomDataRegistry<I> {
 
 	/**
 	 * Register a new CustomPlayers instance
-	 * @param identifier the name of the class (used to return the instance)
+	 *
+	 * @param identifier                   the name of the class (used to return the instance)
 	 * @param customPlayersHandlerInstance a new instance of the class
 	 */
 	public void register(String identifier, CustomDataHandler<I, ? extends CustomData> customPlayersHandlerInstance) {

@@ -8,6 +8,7 @@ import necesse.engine.network.client.Client;
 public interface ClientTickable {
 	/**
 	 * Performs a client tick
+	 *
 	 * @param client the client to tick on
 	 */
 	void clientTick(Client client);

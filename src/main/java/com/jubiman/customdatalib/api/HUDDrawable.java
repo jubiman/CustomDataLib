@@ -3,7 +3,7 @@ package com.jubiman.customdatalib.api;
 import necesse.engine.tickManager.TickManager;
 import necesse.entity.mobs.PlayerMob;
 
-import java.awt.Rectangle;
+import java.awt.*;
 
 /**
  * Specifies that the CustomPlayer is drawable on the HUD
@@ -11,9 +11,10 @@ import java.awt.Rectangle;
 public interface HUDDrawable {
 	/**
 	 * Draws the HUD.
+	 *
 	 * @param tickManager the tickManager
-	 * @param playerMob the playerMob
-	 * @param renderBox the renderBox
+	 * @param playerMob   the playerMob
+	 * @param renderBox   the renderBox
 	 */
 	void drawHUD(TickManager tickManager, PlayerMob playerMob, Rectangle renderBox);
 }

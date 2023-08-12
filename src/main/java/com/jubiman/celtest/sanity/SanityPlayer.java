@@ -23,17 +23,15 @@ import necesse.entity.mobs.hostile.pirates.PirateMob;
 import necesse.level.maps.Level;
 import necesse.level.maps.biomes.MobChance;
 
-import java.awt.Rectangle;
-import java.awt.Point;
+import java.awt.*;
 import java.util.Random;
 
 public class SanityPlayer extends CustomPlayer implements ClientTickable, Savable, HUDDrawable, Syncable {
 	public int ticksSinceLastHallucination;
 	public int nextHallucination;
 	public int nextSanityIncrease;
-	private byte sanity;
-
 	public Mana mana = new Mana(new Random().nextInt(500) + 1);
+	private byte sanity;
 
 	public SanityPlayer(long auth) {
 		super(auth);
@@ -78,7 +76,7 @@ public class SanityPlayer extends CustomPlayer implements ClientTickable, Savabl
 			}
 		}
 		if (nextSanityIncrease == 0) {
-			nextSanityIncrease = 1200; // TODO: add small randomness?
+			nextSanityIncrease = 1200;
 			++sanity;
 			if (sanity > 100) sanity = 100;
 		} else --nextSanityIncrease;
@@ -86,12 +84,6 @@ public class SanityPlayer extends CustomPlayer implements ClientTickable, Savabl
 
 	@Override
 	public void clientTick(Client client) {
-	}
-
-	public void setSanity(int amount) {
-		sanity = (byte) amount;
-		if (sanity < 0) sanity = 0;
-		else if (sanity > 100) sanity = 100;
 	}
 
 	public void addSanity(int amount) {
@@ -104,6 +96,12 @@ public class SanityPlayer extends CustomPlayer implements ClientTickable, Savabl
 
 	public byte getSanity() {
 		return sanity;
+	}
+
+	public void setSanity(int amount) {
+		sanity = (byte) amount;
+		if (sanity < 0) sanity = 0;
+		else if (sanity > 100) sanity = 100;
 	}
 
 	@Override

@@ -8,6 +8,7 @@ import necesse.engine.save.SaveData;
 
 /**
  * Handler for handling custom mobs in your mod
+ *
  * @param <T> your CustomMob class
  */
 public class CustomMobsHandler<T extends CustomMob> extends CustomDataHandler<Integer, T> {
@@ -17,8 +18,9 @@ public class CustomMobsHandler<T extends CustomMob> extends CustomDataHandler<In
 
 	/**
 	 * Save mobs' data.
+	 *
 	 * @param saveData the parent save object
-	 * @param id the id of the player to save
+	 * @param id       the id of the player to save
 	 */
 	@Override
 	public void save(SaveData saveData, Integer id) {
@@ -32,19 +34,21 @@ public class CustomMobsHandler<T extends CustomMob> extends CustomDataHandler<In
 
 	/**
 	 * Load player from saved data. Gets called before the rest of the player is loaded.
+	 *
 	 * @param loadData data to load from (should be the same as where you save, usually ServerClient)
-	 * @param id the id of the player to load
+	 * @param id       the id of the player to load
 	 */
 	public void loadEnter(LoadData loadData, int id) {
 		T p = get(id);
-		if (p instanceof Savable) // TODO: should always be true
+		if (p instanceof Savable) // TODO: should always be true?
 			((Savable) p).loadEnter(loadData);
 	}
 
 	/**
 	 * Load player from saved data. Gets called after the rest of the player is loaded.
+	 *
 	 * @param loadData data to load from (should be the same as where you save, usually ServerClient)
-	 * @param id the id of the player to load
+	 * @param id       the id of the player to load
 	 */
 	public void loadExit(LoadData loadData, int id) {
 		T p = get(id);
@@ -61,6 +65,7 @@ public class CustomMobsHandler<T extends CustomMob> extends CustomDataHandler<In
 
 	/**
 	 * Removes a player from the map
+	 *
 	 * @param id the id of the player to remove
 	 */
 	public void remove(int id) {
@@ -69,8 +74,10 @@ public class CustomMobsHandler<T extends CustomMob> extends CustomDataHandler<In
 
 	/**
 	 * Called every tick on the server. Override this to add your own logic.
+	 *
 	 * @param server the server instance
 	 */
 	public void serverTick(Server server) {
+		// TODO: Might need some stuff, maybe not?
 	}
 }

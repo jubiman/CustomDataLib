@@ -32,7 +32,8 @@ public class CustomMobRegistry extends CustomDataRegistry<Integer> {
 		GameEvents.addListener(ServerStopEvent.class, new GameEventListener<ServerStopEvent>() {
 			@Override
 			public void onEvent(ServerStopEvent e) {
-				// TODO
+				INSTANCE.stopAll();
+				INSTANCE.registry.clear();
 			}
 		});
 		GameEvents.addListener(ServerStartEvent.class, new GameEventListener<ServerStartEvent>() {
@@ -47,8 +48,9 @@ public class CustomMobRegistry extends CustomDataRegistry<Integer> {
 
 	/**
 	 * Register a new CustomMobsHandler class. Used by individual mods
+	 *
 	 * @param identifier the name of the class
-	 * @param clazz a reference to the class
+	 * @param clazz      a reference to the class
 	 */
 	public static void registerClass(String identifier, Class<? extends CustomMobsHandler<?>> clazz) {
 		try {
@@ -61,9 +63,21 @@ public class CustomMobRegistry extends CustomDataRegistry<Integer> {
 	}
 
 	/**
+	 * Server ticks all registered CustomMobs. Please do not call this function as it's called every tick when Necesse's server ticks.
+	 *
+	 * @param server the server to tick from
+	 */
+	public static void serverTickAll(Server server) {
+		for (CustomDataHandler<Integer, ? extends CustomData> cms : INSTANCE.registry.values()) {
+			((CustomMobsHandler<? extends CustomMob>) cms).serverTick(server);
+		}
+	}
+
+	/**
 	 * Saves mob data from all registered CustomMob classes
+	 *
 	 * @param save the SaveData to save to
-	 * @param id the id of the mob to save
+	 * @param id   the id of the mob to save
 	 */
 	public void saveAll(SaveData save, Object id) {
 		for (CustomDataHandler<Integer, ? extends CustomData> cms : registry.values()) {
@@ -75,6 +89,7 @@ public class CustomMobRegistry extends CustomDataRegistry<Integer> {
 
 	/**
 	 * Loads all registered CustomMobs, is called before the rest of the mob is loaded
+	 *
 	 * @param data the LoadData to load from
 	 */
 	public void loadAllEnter(LoadData data, int id) {
@@ -85,22 +100,13 @@ public class CustomMobRegistry extends CustomDataRegistry<Integer> {
 
 	/**
 	 * Loads all registered CustomMobs, is called after the rest of the mob is loaded
+	 *
 	 * @param data the LoadData to load from
 	 */
 	public void loadAllExit(LoadData data, int id) {
 		LoadData mobData = data.getFirstLoadDataByName("CustomMobData");
 		for (Map.Entry<String, CustomDataHandler<Integer, ? extends CustomData>> entry : registry.entrySet())
 			((CustomMobsHandler<? extends CustomMob>) entry.getValue()).loadExit(mobData.getFirstLoadDataByName(entry.getKey()), id);
-	}
-
-	/**
-	 * Server ticks all registered CustomMobs. Please do not call this function as it's called every tick when Necesse's server ticks.
-	 * @param server the server to tick from
-	 */
-	public static void serverTickAll(Server server) {
-		for (CustomDataHandler<Integer, ? extends CustomData> cms : INSTANCE.registry.values()) {
-			((CustomMobsHandler<? extends CustomMob>) cms).serverTick(server);
-		}
 	}
 
 	/**

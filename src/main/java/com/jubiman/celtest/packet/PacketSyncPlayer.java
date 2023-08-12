@@ -32,6 +32,6 @@ public class PacketSyncPlayer extends Packet {
 
 	@Override
 	public void processClient(NetworkPacket packet, Client client) {
-		((SanityPlayer)ClientEnvironment.get(SanityPlayersHandler.name)).mana = new Mana(mana, maxMana);
+		((SanityPlayer) ClientEnvironment.get(SanityPlayersHandler.name)).mana = new Mana(mana, maxMana);
 	}
 }

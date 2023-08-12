@@ -1,9 +1,7 @@
 package com.jubiman.celtest.sanity.mana;
 
 import com.jubiman.celtest.sanity.SanityPlayer;
-import necesse.engine.GameLog;
 import necesse.engine.Screen;
-import necesse.engine.network.client.Client;
 import necesse.engine.network.server.Server;
 import necesse.engine.save.LoadData;
 import necesse.engine.save.SaveData;
@@ -12,17 +10,15 @@ import necesse.gfx.gameFont.FontOptions;
 import necesse.gfx.gameTexture.GameTexture;
 
 public class Mana {
-	private int mana;
-	private int maxMana;
-	private int missingManaPercent;
-
 	public static GameTexture barTexture;
 	public static GameTexture currBarTexture;
 	public static GameTexture outOfManaBarTexture;
 	public static GameTexture outlineLeftTexture;
 	public static GameTexture outlineMidTexture;
 	public static GameTexture outlineRightTexture;
-
+	private int mana;
+	private int maxMana;
+	private int missingManaPercent;
 	private int lastKnownIntelligence = 1;
 	private boolean mageClassApplied = false;
 
@@ -71,9 +67,8 @@ public class Mana {
 	}
 
 	public void setMaxMana(int intelligence) {
-		this.maxMana = (int) ((100 + (0.5 * intelligence * (intelligence - 1)))); // TODO: check formula
+		this.maxMana = (int) ((100 + (0.5 * intelligence * (intelligence - 1))));
 		mageClassApplied = false;
-		// TODO: maybe send update packet?
 	}
 
 	public void draw() {
@@ -103,11 +98,6 @@ public class Mana {
 		missingManaPercent = 0;
 		if (server.tickManager().isFirstGameTickInSecond())
 			mana = Math.min(Math.max(mana + 10 + maxMana / 100 + ((maxMana - mana) * (missingManaPercent / 100)), 0), maxMana); // regenerate 10 + 1 % max mana per second
-		// TODO: maybe send a sync packet just in case?
-	}
-
-	public void clientTick(Client client, SanityPlayer player) {
-		// TODO: update the current mana according to known data
 	}
 
 	public boolean useMana(int mana) {

@@ -7,7 +7,7 @@ import necesse.entity.mobs.PlayerMob;
 import necesse.gfx.forms.components.FormBuffHud;
 import net.bytebuddy.asm.Advice;
 
-import java.awt.Rectangle;
+import java.awt.*;
 
 @ModMethodPatch(target = FormBuffHud.class, name = "draw", arguments = {TickManager.class, PlayerMob.class, Rectangle.class})
 public class HudDrawPatch {

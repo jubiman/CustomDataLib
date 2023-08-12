@@ -13,11 +13,5 @@ public class ServerTickPatch {
 	@Advice.OnMethodExit
 	static void onExit(@Advice.This Server server) {
 		CustomPlayerRegistry.serverTickAll(server);
-
-//		for (int i = 0; i < server.getPlayersOnline(); ++i) {
-//			PlayerMob player = server.getPlayer(i);
-//			//if (player.isServerClient())
-//			//	CustomPlayerRegistry.serverTickAll(server);
-//		}
 	}
 }

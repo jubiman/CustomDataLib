@@ -54,7 +54,7 @@ public class Main { // just so it's loaded to upload it to steam workshop
 	}
 
 	public void postInit() {
-		// TODO Register (debug) command
+		// TODO Register (debug) command (remove this)
 		CommandsManager.registerServerCommand(new SanityCommand());
 
 		// Register event listeners
