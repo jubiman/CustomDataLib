@@ -1,9 +1,6 @@
 package com.jubiman.customentitylib.player;
 
-import com.jubiman.customentitylib.api.CustomData;
-import com.jubiman.customentitylib.api.CustomDataHandler;
-import com.jubiman.customentitylib.api.CustomDataRegistry;
-import com.jubiman.customentitylib.api.ClientTickable;
+import com.jubiman.customentitylib.api.*;
 import necesse.engine.GameEventListener;
 import necesse.engine.GameEvents;
 import necesse.engine.GameLog;
@@ -122,7 +119,7 @@ public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
 	public void loadAllExit(LoadData data, long authentication) {
 		LoadData playerData = data.getFirstLoadDataByName("CustomPlayerData");
 		for (Map.Entry<String, CustomDataHandler<Long, ? extends CustomData>> entry : registry.entrySet())
-			((CustomPlayersHandler<? extends CustomPlayer>) entry.getValue()).loadEnter(playerData.getFirstLoadDataByName(entry.getKey()), authentication);
+			((CustomPlayersHandler<? extends CustomPlayer>) entry.getValue()).loadExit(playerData.getFirstLoadDataByName(entry.getKey()), authentication);
 	}
 
 	/**
@@ -173,6 +170,15 @@ public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
 	public void removeUser(long authentication) {
 		for (CustomDataHandler<Long, ? extends CustomData> cps : registry.values())
 			((CustomPlayersHandler<? extends CustomPlayer>) cps).remove(authentication);
+	}
+
+	public void sendSyncPackets(long authentication, ServerClient serverClient) {
+		for (CustomDataHandler<Long, ? extends CustomData> handler : registry.values()) {
+			CustomData player = handler.get(authentication);
+			if (player instanceof Syncable) {
+				serverClient.sendPacket(((Syncable) player).getSyncPacket());
+			}
+		}
 	}
 }
 

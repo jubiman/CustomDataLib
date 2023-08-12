@@ -2,8 +2,10 @@ package com.jubiman.customentitylib.player;
 
 import com.jubiman.customentitylib.api.CustomDataHandler;
 import com.jubiman.customentitylib.api.Savable;
+import com.jubiman.customentitylib.api.Syncable;
 import necesse.engine.GameEventListener;
 import necesse.engine.GameEvents;
+import necesse.engine.GameLog;
 import necesse.engine.events.ServerClientDisconnectEvent;
 import necesse.engine.events.ServerStopEvent;
 import necesse.engine.network.server.Server;
@@ -33,6 +35,7 @@ public abstract class CustomPlayersHandler<T extends CustomPlayer> extends Custo
 	 * Creates a new instance of the custom player
 	 * @return the new custom player instance
 	 */
+	@Deprecated
 	public T createNew() throws InvocationTargetException, InstantiationException, IllegalAccessException {
 		return ctor.newInstance();
 	}
@@ -74,10 +77,9 @@ public abstract class CustomPlayersHandler<T extends CustomPlayer> extends Custo
 	 * @param auth the authentication of the player to load
 	 */
 	public void loadEnter(LoadData loadData, long auth) {
-		LoadData data = loadData.getLoadData().get(0);
 		T p = get(auth);
 		if (p instanceof Savable) // TODO: should always be true
-			((Savable) p).loadEnter(data);
+			((Savable) p).loadEnter(loadData);
 	}
 
 	/**
@@ -86,10 +88,9 @@ public abstract class CustomPlayersHandler<T extends CustomPlayer> extends Custo
 	 * @param auth the authentication of the player to load
 	 */
 	public void loadExit(LoadData loadData, long auth) {
-		LoadData data = loadData.getLoadData().get(0);
 		T p = get(auth);
 		if (p instanceof Savable)
-			((Savable) p).loadExit(data);
+			((Savable) p).loadExit(loadData);
 	}
 
 	/**
@@ -112,5 +113,14 @@ public abstract class CustomPlayersHandler<T extends CustomPlayer> extends Custo
 	 * @param server the server instance
 	 */
 	public void serverTick(Server server) {
+		// Send sync packet every second
+		// TODO: maybe make less?
+		if (server.tickManager().isFirstGameTickInSecond()) {
+			for (T p : values()) {
+				if (p instanceof Syncable) {
+					server.network.sendPacket(((Syncable) p).getSyncPacket(), server.getClientByAuth(p.auth));
+				}
+			}
+		}
 	}
 }
