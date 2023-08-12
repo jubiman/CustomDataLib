@@ -1,4 +1,4 @@
-package com.jubiman.customentitylib.api;
+package com.jubiman.customdatalib.api;
 
 import necesse.engine.save.LoadData;
 import necesse.engine.save.SaveData;

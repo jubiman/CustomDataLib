@@ -1,9 +1,8 @@
-package com.jubiman.customentitylib.patch;
+package com.jubiman.customdatalib.patch;
 
-import com.jubiman.customentitylib.player.CustomPlayerRegistry;
+import com.jubiman.customdatalib.player.CustomPlayerRegistry;
 import necesse.engine.modLoader.annotations.ModMethodPatch;
 import necesse.engine.network.server.Server;
-import necesse.entity.mobs.PlayerMob;
 import net.bytebuddy.asm.Advice;
 
 /**

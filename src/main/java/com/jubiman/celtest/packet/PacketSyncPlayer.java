@@ -3,7 +3,7 @@ package com.jubiman.celtest.packet;
 import com.jubiman.celtest.sanity.SanityPlayer;
 import com.jubiman.celtest.sanity.SanityPlayersHandler;
 import com.jubiman.celtest.sanity.mana.Mana;
-import com.jubiman.customentitylib.environment.ClientEnvironment;
+import com.jubiman.customdatalib.environment.ClientEnvironment;
 import necesse.engine.network.NetworkPacket;
 import necesse.engine.network.Packet;
 import necesse.engine.network.PacketReader;

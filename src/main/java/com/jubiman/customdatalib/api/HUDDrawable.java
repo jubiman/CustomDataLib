@@ -1,4 +1,4 @@
-package com.jubiman.customentitylib.api;
+package com.jubiman.customdatalib.api;
 
 import necesse.engine.tickManager.TickManager;
 import necesse.entity.mobs.PlayerMob;

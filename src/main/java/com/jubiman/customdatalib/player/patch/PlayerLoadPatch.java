@@ -1,6 +1,6 @@
-package com.jubiman.customentitylib.patch;
+package com.jubiman.customdatalib.player.patch;
 
-import com.jubiman.customentitylib.player.CustomPlayerRegistry;
+import com.jubiman.customdatalib.player.CustomPlayerRegistry;
 import necesse.engine.modLoader.annotations.ModMethodPatch;
 import necesse.engine.network.server.ServerClient;
 import necesse.engine.save.LoadData;
@@ -15,7 +15,6 @@ public class PlayerLoadPatch {
 	static void onEnter(@Advice.This ServerClient self, @Advice.Argument(0) LoadData loadData) {
 		try {
 			CustomPlayerRegistry.INSTANCE.loadAllEnter(loadData, self.authentication);
-			//ServerEnvironment.PLAYER_REGISTRY.loadAllEnter(loadData, self.authentication);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -25,7 +24,6 @@ public class PlayerLoadPatch {
 	static void onExit(@Advice.This ServerClient self, @Advice.Argument(0) LoadData loadData) {
 		try {
 			CustomPlayerRegistry.INSTANCE.loadAllExit(loadData, self.authentication);
-			//ServerEnvironment.PLAYER_REGISTRY.loadAllExit(loadData, self.authentication);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

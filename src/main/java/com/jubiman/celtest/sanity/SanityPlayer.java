@@ -2,11 +2,11 @@ package com.jubiman.celtest.sanity;
 
 import com.jubiman.celtest.packet.PacketSyncPlayer;
 import com.jubiman.celtest.sanity.mana.Mana;
-import com.jubiman.customentitylib.api.ClientTickable;
-import com.jubiman.customentitylib.api.HUDDrawable;
-import com.jubiman.customentitylib.api.Savable;
-import com.jubiman.customentitylib.api.Syncable;
-import com.jubiman.customentitylib.player.CustomPlayer;
+import com.jubiman.customdatalib.api.ClientTickable;
+import com.jubiman.customdatalib.api.HUDDrawable;
+import com.jubiman.customdatalib.api.Savable;
+import com.jubiman.customdatalib.api.Syncable;
+import com.jubiman.customdatalib.player.CustomPlayer;
 import necesse.engine.network.Packet;
 import necesse.engine.network.client.Client;
 import necesse.engine.network.packet.PacketMobBuff;

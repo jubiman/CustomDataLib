@@ -1,6 +1,5 @@
-package com.jubiman.customentitylib.environment;
+package com.jubiman.customdatalib.environment;
 
-import com.jubiman.customentitylib.environment.ClientEnvironment;
 import necesse.engine.GameLog;
 import necesse.engine.network.NetworkPacket;
 import necesse.engine.network.Packet;

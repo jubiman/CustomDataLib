@@ -1,17 +1,15 @@
-package com.jubiman.customentitylib.environment;
+package com.jubiman.customdatalib.environment;
 
-import com.jubiman.customentitylib.api.ClientTickable;
-import com.jubiman.customentitylib.api.CustomData;
-import com.jubiman.customentitylib.api.HUDDrawable;
-import com.jubiman.customentitylib.player.CustomPlayer;
-import com.jubiman.customentitylib.player.CustomPlayerRegistry;
+import com.jubiman.customdatalib.api.ClientTickable;
+import com.jubiman.customdatalib.api.CustomData;
+import com.jubiman.customdatalib.api.HUDDrawable;
+import com.jubiman.customdatalib.player.CustomPlayer;
 import necesse.engine.GameLog;
 import necesse.engine.network.client.Client;
 import necesse.engine.tickManager.TickManager;
 import necesse.entity.mobs.PlayerMob;
 
 import java.awt.Rectangle;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -47,22 +45,6 @@ public class ClientEnvironment {
 		for (CustomData cd : customDataHashMap.values()) {
 			if (cd instanceof ClientTickable)
 				((ClientTickable) cd).clientTick(client);
-		}
-	}
-
-	/**
-	 * Syncs all registered CustomPlayers' data.
-	 * Will be approved upon in the future. For now, it's deprecated.
-	 * @param identifier the identifier to sync
-	 */
-	@Deprecated
-	public static void syncClientData(String identifier) {
-		if (!customDataHashMap.containsKey(identifier)) {
-			try {
-				CustomPlayerRegistry.createNewPlayer(identifier);
-			} catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
-				throw new RuntimeException(e);
-			}
 		}
 	}
 

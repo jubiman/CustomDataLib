@@ -1,7 +1,7 @@
 package com.jubiman.celtest.sanity;
 
-import com.jubiman.customentitylib.player.CustomPlayerRegistry;
-import com.jubiman.customentitylib.player.CustomPlayersHandler;
+import com.jubiman.customdatalib.player.CustomPlayerRegistry;
+import com.jubiman.customdatalib.player.CustomPlayersHandler;
 import necesse.engine.network.server.Server;
 import necesse.level.maps.biomes.MobSpawnTable;
 

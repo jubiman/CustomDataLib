@@ -1,3 +1,3 @@
-# CustomPlayerLib
+# CustomDataLib
 
-Example can be found at https://github.com/jubiman/CustomPlayerLib-Example/tree/main
+Example can be found at https://github.com/jubiman/CustomDataLib-Example/

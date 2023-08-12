@@ -1,14 +1,14 @@
-package com.jubiman.customentitylib.player;
+package com.jubiman.customdatalib.player;
 
-import com.jubiman.customentitylib.api.*;
+import com.jubiman.customdatalib.api.CustomData;
+import com.jubiman.customdatalib.api.CustomDataHandler;
+import com.jubiman.customdatalib.api.CustomDataRegistry;
+import com.jubiman.customdatalib.api.Syncable;
 import necesse.engine.GameEventListener;
 import necesse.engine.GameEvents;
 import necesse.engine.GameLog;
 import necesse.engine.events.ServerStartEvent;
 import necesse.engine.events.ServerStopEvent;
-import necesse.engine.network.NetworkClient;
-import necesse.engine.network.client.Client;
-import necesse.engine.network.client.ClientClient;
 import necesse.engine.network.server.Server;
 import necesse.engine.network.server.ServerClient;
 import necesse.engine.save.LoadData;
@@ -24,10 +24,6 @@ import java.util.Map;
  * Registry where mods can register CustomPlayers
  */
 public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
-	// TODO: I think this can be replaced with a separate client-side registry?
-	@Deprecated
-	private static final CustomPlayerRegistry CLIENT_INSTANCE = new CustomPlayerRegistry();
-
 	/**
 	 * The main instance of the CustomPlayer registry, which resides on the server environment
 	 */
@@ -52,23 +48,6 @@ public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
 		});
 	}
 
-	@Deprecated
-	public static CustomPlayerRegistry getAppropriateInstance() {
-		// TODO: figure out if we are on the client or on the server
-		return null;
-	}
-
-	@Deprecated
-	public static CustomPlayerRegistry getAppropriateInstance(NetworkClient networkClient) {
-		// TODO: this might work 9/10 times?
-		if (networkClient instanceof ClientClient) {
-			return CLIENT_INSTANCE;
-		} else if (networkClient instanceof ServerClient) {
-			return INSTANCE;
-		}
-		return null;
-	}
-
 	/**
 	 * Register a new CustomPlayersHandler class. Used by individual mods
 	 * @param identifier the name of the class
@@ -82,11 +61,6 @@ public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
 		} catch (NoSuchMethodException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	@Deprecated
-	public static CustomData createNewPlayer(String identifier) throws InvocationTargetException, InstantiationException, IllegalAccessException {
-		return classHashMap.get(identifier).newInstance().createNew();
 	}
 
 	/**
@@ -130,17 +104,6 @@ public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
 		for (CustomDataHandler<Long, ? extends CustomData> cps : INSTANCE.registry.values()) {
 				((CustomPlayersHandler<? extends CustomPlayer>) cps).serverTick(server);
 		}
-	}
-
-	/**
-	 * Client ticks all registered CustomPlayers. Please do not call this function as it's called every tick when Necesse's client ticks.
-	 * @param client the client to tick from
-	 */
-	@Deprecated
-	public static void clientTickAll(Client client) {
-		for (CustomDataHandler<Long, ? extends CustomData> cps : CLIENT_INSTANCE.registry.values())
-			if (cps instanceof ClientTickable)
-				((ClientTickable) cps).clientTick(client);
 	}
 
 	/**

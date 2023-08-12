@@ -1,20 +1,11 @@
-package com.jubiman.customentitylib.player;
+package com.jubiman.customdatalib.player;
 
-import com.jubiman.customentitylib.api.CustomDataHandler;
-import com.jubiman.customentitylib.api.Savable;
-import com.jubiman.customentitylib.api.Syncable;
-import necesse.engine.GameEventListener;
-import necesse.engine.GameEvents;
-import necesse.engine.GameLog;
-import necesse.engine.events.ServerClientDisconnectEvent;
-import necesse.engine.events.ServerStopEvent;
+import com.jubiman.customdatalib.api.CustomDataHandler;
+import com.jubiman.customdatalib.api.Savable;
+import com.jubiman.customdatalib.api.Syncable;
 import necesse.engine.network.server.Server;
 import necesse.engine.save.LoadData;
 import necesse.engine.save.SaveData;
-
-import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
-import java.util.Set;
 
 /**
  * Handler for handling custom players in your mod
@@ -32,32 +23,7 @@ public abstract class CustomPlayersHandler<T extends CustomPlayer> extends Custo
 	}
 
 	/**
-	 * Creates a new instance of the custom player
-	 * @return the new custom player instance
-	 */
-	@Deprecated
-	public T createNew() throws InvocationTargetException, InstantiationException, IllegalAccessException {
-		return ctor.newInstance();
-	}
-
-	/**
-	 * Iterate through the keys (player auths).
-	 * @return a set of all keys (all player auths )
-	 */
-	public Set<Long> keyIterator() {
-		return userMap.keySet();
-	}
-
-	/**
-	 * Returns the values
-	 * @return a collection of all values (all CustomPlayers)
-	 */
-	public Collection<T> values() {
-		return userMap.values();
-	}
-
-	/**
-	 * Save player's data.
+	 * Save players' data.
 	 * @param saveData the parent save object (usually ServerClient)
 	 * @param authentication the authentication of the player to save
 	 */

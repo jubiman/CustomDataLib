@@ -1,11 +1,18 @@
-package com.jubiman.customentitylib.api;
+package com.jubiman.customdatalib.api;
 
 import necesse.engine.save.SaveData;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Set;
 
+/**
+ * A handler for custom data
+ * @param <I> the identifier type (i.e. Long for players, Integer for mobs)
+ * @param <T> the CustomData type (i.e. CustomPlayer for players, CustomMob for mobs)
+ */
 public abstract class CustomDataHandler<I, T extends CustomData> {
 	protected final HashMap<I, T> userMap = new HashMap<>();
 	protected final Constructor<T> ctor;
@@ -49,5 +56,22 @@ public abstract class CustomDataHandler<I, T extends CustomData> {
 		SaveData save = new SaveData(this.handlerName);
 		((Savable) p).addSaveData(save);
 		saveData.addSaveData(save);
+	}
+
+
+	/**
+	 * Iterate through the keys (player auths).
+	 * @return a set of all keys (all player auths )
+	 */
+	public Set<I> keyIterator() {
+		return userMap.keySet();
+	}
+
+	/**
+	 * Returns the values
+	 * @return a collection of all values (all CustomPlayers)
+	 */
+	public Collection<T> values() {
+		return userMap.values();
 	}
 }

@@ -1,4 +1,4 @@
-package com.jubiman.customentitylib;
+package com.jubiman.customdatalib;
 
 import com.jubiman.celtest.buff.InsanityIndicatorBuff;
 import com.jubiman.celtest.command.SanityCommand;
@@ -6,9 +6,9 @@ import com.jubiman.celtest.packet.PacketSyncPlayer;
 import com.jubiman.celtest.sanity.SanityPlayer;
 import com.jubiman.celtest.sanity.SanityPlayersHandler;
 import com.jubiman.celtest.sanity.mana.Mana;
-import com.jubiman.customentitylib.environment.ClientEnvironment;
-import com.jubiman.customentitylib.environment.PacketCreateClientSidePlayer;
-import com.jubiman.customentitylib.player.CustomPlayerRegistry;
+import com.jubiman.customdatalib.environment.ClientEnvironment;
+import com.jubiman.customdatalib.environment.PacketCreateClientSidePlayer;
+import com.jubiman.customdatalib.player.CustomPlayerRegistry;
 import necesse.engine.GameEventListener;
 import necesse.engine.GameEvents;
 import necesse.engine.commands.CommandsManager;
@@ -28,7 +28,7 @@ import necesse.engine.registries.PacketRegistry;
 public class Main { // just so it's loaded to upload it to steam workshop
 	public void init() {
 		try {
-			Class.forName("com.jubiman.customentitylib.player.CustomPlayerRegistry");
+			Class.forName("com.jubiman.customdatalib.player.CustomPlayerRegistry");
 
 			// Register packets
 			PacketRegistry.registerPacket(PacketCreateClientSidePlayer.class);

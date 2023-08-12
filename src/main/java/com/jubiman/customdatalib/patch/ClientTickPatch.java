@@ -1,10 +1,8 @@
-package com.jubiman.customentitylib.patch;
+package com.jubiman.customdatalib.patch;
 
-import com.jubiman.customentitylib.environment.ClientEnvironment;
-import com.jubiman.customentitylib.player.CustomPlayerRegistry;
+import com.jubiman.customdatalib.environment.ClientEnvironment;
 import necesse.engine.modLoader.annotations.ModMethodPatch;
 import necesse.engine.network.client.Client;
-import necesse.engine.network.client.ClientClient;
 import net.bytebuddy.asm.Advice;
 
 /**

@@ -1,6 +1,6 @@
-package com.jubiman.customentitylib.patch;
+package com.jubiman.customdatalib.patch;
 
-import com.jubiman.customentitylib.environment.ClientEnvironment;
+import com.jubiman.customdatalib.environment.ClientEnvironment;
 import necesse.engine.modLoader.annotations.ModMethodPatch;
 import necesse.engine.tickManager.TickManager;
 import necesse.entity.mobs.PlayerMob;
