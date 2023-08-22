@@ -19,9 +19,23 @@ public abstract class CustomDataHandler<I, T extends CustomData> {
 	 * The name of the handler (usually tied to the mod name)
 	 */
 	public final String handlerName;
+
+	/**
+	 * The map of all CustomData objects
+	 */
 	protected final HashMap<I, T> userMap = new HashMap<>();
+
+	/**
+	 * The constructor for the CustomData object, created from the class and parameter types
+	 */
 	protected final Constructor<T> ctor;
 
+	/**
+	 * Constructs the storage class for custom data
+	 * @param clazz the class extending CustomData
+	 * @param parameterTypes the parameter types for the constructor
+	 * @param handlerName the name of the handler (usually tied to the mod name)
+	 */
 	public CustomDataHandler(Class<T> clazz, Class<?>[] parameterTypes, String handlerName) {
 		this.handlerName = handlerName;
 		try {

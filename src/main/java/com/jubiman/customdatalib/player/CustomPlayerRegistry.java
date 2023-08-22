@@ -28,7 +28,10 @@ public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
 	 * The main instance of the CustomPlayer registry, which resides on the server environment
 	 */
 	public static final CustomPlayerRegistry INSTANCE = new CustomPlayerRegistry();
-	//private final HashMap<String, CustomPlayersHandler<? extends CustomData>> registry = new HashMap<>();
+
+	/**
+	 * A HashMap containing all registered CustomPlayers
+ 	 */
 	private static final HashMap<String, Constructor<? extends CustomPlayersHandler<?>>> classHashMap = new HashMap<>();
 
 	static {
@@ -93,6 +96,7 @@ public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
 	 * Loads all registered CustomPlayers, is called before the rest of the player is loaded
 	 *
 	 * @param data the LoadData to load from
+	 * @param authentication the authentication of the player to load
 	 */
 	public void loadAllEnter(LoadData data, long authentication) {
 		LoadData playerData = data.getFirstLoadDataByName("CustomPlayerData");
@@ -104,6 +108,7 @@ public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
 	 * Loads all registered CustomPlayers, is called after the rest of the player is loaded
 	 *
 	 * @param data the LoadData to load from
+	 * @param authentication the authentication of the player to load
 	 */
 	public void loadAllExit(LoadData data, long authentication) {
 		LoadData playerData = data.getFirstLoadDataByName("CustomPlayerData");
@@ -130,16 +135,28 @@ public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
 		}
 	}
 
+	/**
+	 * Stops all registered CustomPlayers. Please do not call this function as it's called when Necesse's server stops.
+	 */
 	public void stopAll() {
 		for (CustomDataHandler<Long, ? extends CustomData> cps : registry.values())
 			((CustomPlayersHandler<? extends CustomPlayer>) cps).stop();
 	}
 
+	/**
+	 * Removes a player from all registered CustomPlayers. Please do not call this function as it's called when Necesse's server stops.
+	 * @param authentication the authentication of the player to remove
+	 */
 	public void removeUser(long authentication) {
 		for (CustomDataHandler<Long, ? extends CustomData> cps : registry.values())
 			((CustomPlayersHandler<? extends CustomPlayer>) cps).remove(authentication);
 	}
 
+	/**
+	 * Sends all sync packets from all registered CustomPlayers
+	 * @param authentication the authentication of the player to send the sync packets to
+	 * @param serverClient the serverClient to send the sync packets to
+	 */
 	public void sendSyncPackets(long authentication, ServerClient serverClient) {
 		for (CustomDataHandler<Long, ? extends CustomData> handler : registry.values()) {
 			CustomData player = handler.get(authentication);

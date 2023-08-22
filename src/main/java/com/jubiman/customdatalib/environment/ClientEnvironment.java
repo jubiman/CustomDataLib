@@ -23,6 +23,10 @@ public class ClientEnvironment {
 	 * A HashMap containing all mods' custom players that are ClientTickable or HUDDrawable
 	 */
 	private static final HashMap<String, CustomData> customDataHashMap = new HashMap<>();
+
+	/**
+	 * A HashMap containing all registered CustomPlayers
+	 */
 	private static final HashMap<String, Function<Long, ? extends CustomPlayer>> registeredPlayers = new HashMap<>();
 
 	/**
@@ -73,6 +77,11 @@ public class ClientEnvironment {
 		}
 	}
 
+	/**
+	 * Gets a CustomPlayer from the client-side registry
+	 * @param name the name of the CustomPlayer to get
+	 * @return the CustomPlayer
+	 */
 	public static CustomData get(String name) {
 		return customDataHashMap.get(name);
 	}

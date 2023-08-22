@@ -6,7 +6,7 @@ import necesse.engine.network.client.Client;
 import net.bytebuddy.asm.Advice;
 
 /**
- * Client ticks all players that implement ITickable
+ * Client ticks all players that implement ClientTickable
  */
 @ModMethodPatch(target = Client.class, name = "tick", arguments = {})
 public class ClientTickPatch {
