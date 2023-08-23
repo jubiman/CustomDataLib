@@ -1,22 +1,13 @@
 package com.jubiman.customdatalib;
 
-import com.jubiman.celtest.buff.InsanityIndicatorBuff;
-import com.jubiman.celtest.command.SanityCommand;
-import com.jubiman.celtest.packet.PacketSyncPlayer;
-import com.jubiman.celtest.sanity.SanityPlayer;
-import com.jubiman.celtest.sanity.SanityPlayersHandler;
-import com.jubiman.celtest.sanity.mana.Mana;
-import com.jubiman.customdatalib.environment.ClientEnvironment;
 import com.jubiman.customdatalib.environment.PacketCreateClientSidePlayer;
 import com.jubiman.customdatalib.player.CustomPlayerRegistry;
 import necesse.engine.GameEventListener;
 import necesse.engine.GameEvents;
-import necesse.engine.commands.CommandsManager;
 import necesse.engine.events.ServerClientConnectedEvent;
 import necesse.engine.events.ServerClientDisconnectEvent;
 import necesse.engine.events.ServerStopEvent;
 import necesse.engine.modLoader.annotations.ModEntry;
-import necesse.engine.registries.BuffRegistry;
 import necesse.engine.registries.PacketRegistry;
 
 /**
@@ -26,37 +17,26 @@ import necesse.engine.registries.PacketRegistry;
  */
 @ModEntry
 public class Main { // just so it's loaded to upload it to steam workshop
+	/**
+	 * Initializes the mod, called by Necesse
+	 */
 	public void init() {
 		try {
+			// Load registries
 			Class.forName("com.jubiman.customdatalib.player.CustomPlayerRegistry");
+			Class.forName("com.jubiman.customdatalib.mob.CustomMobRegistry");
 
 			// Register packets
 			PacketRegistry.registerPacket(PacketCreateClientSidePlayer.class);
-
-			// TODO: Remove (example code)
-			PacketRegistry.registerPacket(PacketSyncPlayer.class);
-			// Register players handler
-			CustomPlayerRegistry.registerClass(SanityPlayersHandler.name, SanityPlayersHandler.class);
-
-			// Register client-side player
-			ClientEnvironment.registerCustomPlayer(SanityPlayersHandler.name, SanityPlayer::new);
-
-			// Register indicator buff
-			BuffRegistry.registerBuff("insanityindicatorbuff", new InsanityIndicatorBuff());
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	// TODO: remove this
-	public void initResources() {
-		Mana.loadTextures();
-	}
-
+	/**
+	 * Called after all mods have been initialized, called by Necesse
+	 */
 	public void postInit() {
-		// TODO Register (debug) command (remove this)
-		CommandsManager.registerServerCommand(new SanityCommand());
-
 		// Register event listeners
 		GameEvents.addListener(ServerStopEvent.class, new GameEventListener<ServerStopEvent>() {
 			@Override

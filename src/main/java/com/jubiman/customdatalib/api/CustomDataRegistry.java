@@ -8,6 +8,9 @@ import java.util.HashMap;
  * @param <I> The identifier type of the CustomDataHandler (i.e. Long aka auth for players)
  */
 public abstract class CustomDataRegistry<I> {
+	/**
+	 * The registry of all CustomDataHandlers
+	 */
 	protected final HashMap<String, CustomDataHandler<I, ? extends CustomData>> registry = new HashMap<>();
 
 	/**

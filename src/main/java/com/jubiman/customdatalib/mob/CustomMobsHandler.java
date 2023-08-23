@@ -2,9 +2,9 @@ package com.jubiman.customdatalib.mob;
 
 import com.jubiman.customdatalib.api.CustomDataHandler;
 import com.jubiman.customdatalib.api.Savable;
-import necesse.engine.network.server.Server;
 import necesse.engine.save.LoadData;
 import necesse.engine.save.SaveData;
+import necesse.entity.mobs.Mob;
 
 /**
  * Handler for handling custom mobs in your mod
@@ -12,6 +12,11 @@ import necesse.engine.save.SaveData;
  * @param <T> your CustomMob class
  */
 public class CustomMobsHandler<T extends CustomMob> extends CustomDataHandler<Integer, T> {
+	/**
+	 * Constructs the storage class for custom mobs
+	 * @param clazz the class extending CustomMob
+	 * @param handlerName the name of the class, used for creating a save component
+	 */
 	public CustomMobsHandler(Class<T> clazz, String handlerName) {
 		super(clazz, new Class[]{int.class}, handlerName);
 	}
@@ -75,9 +80,9 @@ public class CustomMobsHandler<T extends CustomMob> extends CustomDataHandler<In
 	/**
 	 * Called every tick on the server. Override this to add your own logic.
 	 *
-	 * @param server the server instance
+	 * @param mob the mob to tick
 	 */
-	public void serverTick(Server server) {
+	public void serverTick(Mob mob) {
 		// TODO: Might need some stuff, maybe not?
 	}
 }

@@ -10,7 +10,7 @@ plugins {
 project.ext.modID = "com.jubiman.customdatalib" // The unique id of your mod. Must be all lowercase and cannot use special characters.
 project.ext.modName = "CustomDataLib" // The display name of your mod.
 project.ext.modVersion = "1.0" // Your current builds version. Must follow the xx.xx... format.
-project.ext.gameVersion = "0.21.29" // The target game version.
+project.ext.gameVersion = "0.22.0" // The target game version.
 project.ext.modDescription = "Base implementation for custom data data" // Short description of what your mod is.
 project.ext.author = "Jubiman" // Your name
 
@@ -98,47 +98,47 @@ publishing {
 	repositories {
 		maven {
 			name = "GitHubPackages"
-			url 'https://maven.pkg.github.com/jubiman/CustomEntityLib'
+			url 'https://maven.pkg.github.com/jubiman/CustomDataLib'
 			credentials {
-				username = System.getenv("githubUsername")
-				password = System.getenv("githubToken")
+				username = System.getenv("githubUsername") == null ? githubUsername : System.getenv("githubUsername")
+				password = System.getenv("githubToken") == null ? githubToken : System.getenv("githubToken")
 			}
 		}
-//		maven {
-//			name = "OSSRH"
-//			url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
-//			credentials {
-//				username = ossrhUsername
-//				password = ossrhPassword
-//			}
-//		}
+		maven {
+			name = "OSSRH"
+			url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+			credentials {
+				username = ossrhUsername
+				password = ossrhPassword
+			}
+		}
 	}
 	publications {
 		maven(MavenPublication) {
 			groupId = 'com.jubiman'
-			artifactId = 'customentitylib'
+			artifactId = 'customdatalib'
 
 			from components.java
 			artifact javadocJar
 			artifact sourcesJar
 
 			pom {
-				name = 'Custom Entity Lib'
+				name = 'Custom Data Lib'
 				packaging = 'jar'
 				// optionally artifactId can be defined here
 				description = 'Library for adding custom data to an entity'
-				url = 'https://github.com/jubiman/CustomEntityLib'
+				url = 'https://github.com/jubiman/CustomDataLib'
 
 				scm {
-					connection = 'scm:https://github.com/jubiman/CustomEntityLib'
-					developerConnection = 'scm:https://github.com/jubiman/CustomEntityLib'
-					url = 'https://github.com/jubiman/CustomEntityLib'
+					connection = 'scm:https://github.com/jubiman/CustomDataLib'
+					developerConnection = 'scm:https://github.com/jubiman/CustomDataLib'
+					url = 'https://github.com/jubiman/CustomDataLib'
 				}
 
 				licenses {
 					license {
 						name = 'MIT Licence'
-						url = 'https://github.com/jubiman/CustomEntityLib/LICENSE.md'
+						url = 'https://github.com/jubiman/CustomDataLib/LICENSE.md'
 					}
 				}
 
@@ -153,10 +153,10 @@ publishing {
 	}
 }
 
-//signing {
-//	sign configurations.archives
-//	sign publishing.publications.maven
-//}
+signing {
+	sign configurations.archives
+	sign publishing.publications.maven
+}
 
 task createAppID {
 	group "necesse"

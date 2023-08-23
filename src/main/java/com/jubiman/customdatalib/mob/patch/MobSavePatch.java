@@ -6,6 +6,9 @@ import necesse.engine.save.SaveData;
 import necesse.entity.mobs.Mob;
 import net.bytebuddy.asm.Advice;
 
+/**
+ * Saves all CustomMobs
+ */
 @ModMethodPatch(target = Mob.class, name = "addSaveData", arguments = {SaveData.class})
 public class MobSavePatch {
 	@Advice.OnMethodExit

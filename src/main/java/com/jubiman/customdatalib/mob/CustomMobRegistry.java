@@ -8,9 +8,9 @@ import necesse.engine.GameEvents;
 import necesse.engine.GameLog;
 import necesse.engine.events.ServerStartEvent;
 import necesse.engine.events.ServerStopEvent;
-import necesse.engine.network.server.Server;
 import necesse.engine.save.LoadData;
 import necesse.engine.save.SaveData;
+import necesse.entity.mobs.Mob;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -26,6 +26,10 @@ public class CustomMobRegistry extends CustomDataRegistry<Integer> {
 	 * The main instance of the CustomMob registry, which resides on the server environment
 	 */
 	public static final CustomMobRegistry INSTANCE = new CustomMobRegistry();
+
+	/**
+	 * A HashMap containing all registered CustomMobs
+	 */
 	private static final HashMap<String, Constructor<? extends CustomMobsHandler<?>>> classHashMap = new HashMap<>();
 
 	static {
@@ -65,11 +69,11 @@ public class CustomMobRegistry extends CustomDataRegistry<Integer> {
 	/**
 	 * Server ticks all registered CustomMobs. Please do not call this function as it's called every tick when Necesse's server ticks.
 	 *
-	 * @param server the server to tick from
+	 * @param mob the mob to tick
 	 */
-	public static void serverTickAll(Server server) {
+	public static void serverTickAll(Mob mob) {
 		for (CustomDataHandler<Integer, ? extends CustomData> cms : INSTANCE.registry.values()) {
-			((CustomMobsHandler<? extends CustomMob>) cms).serverTick(server);
+			((CustomMobsHandler<? extends CustomMob>) cms).serverTick(mob);
 		}
 	}
 
@@ -91,6 +95,7 @@ public class CustomMobRegistry extends CustomDataRegistry<Integer> {
 	 * Loads all registered CustomMobs, is called before the rest of the mob is loaded
 	 *
 	 * @param data the LoadData to load from
+	 * @param id   the id of the mob to load
 	 */
 	public void loadAllEnter(LoadData data, int id) {
 		LoadData mobData = data.getFirstLoadDataByName("CustomMobData");
@@ -102,6 +107,7 @@ public class CustomMobRegistry extends CustomDataRegistry<Integer> {
 	 * Loads all registered CustomMobs, is called after the rest of the mob is loaded
 	 *
 	 * @param data the LoadData to load from
+	 * @param id   the id of the mob to load
 	 */
 	public void loadAllExit(LoadData data, int id) {
 		LoadData mobData = data.getFirstLoadDataByName("CustomMobData");
@@ -125,11 +131,18 @@ public class CustomMobRegistry extends CustomDataRegistry<Integer> {
 		}
 	}
 
+	/**
+	 * Stops all registered CustomMobs. Please do not call this function as it's called when Necesse's server stops.
+	 */
 	public void stopAll() {
 		for (CustomDataHandler<Integer, ? extends CustomData> cms : registry.values())
 			((CustomMobsHandler<? extends CustomMob>) cms).stop();
 	}
 
+	/**
+	 * Removes a mob from the map
+	 * @param id the id of the mob to remove
+	 */
 	public void removeUser(int id) {
 		for (CustomDataHandler<Integer, ? extends CustomData> cms : registry.values())
 			((CustomMobsHandler<? extends CustomMob>) cms).remove(id);
