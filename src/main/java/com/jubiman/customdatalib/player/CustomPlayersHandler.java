@@ -89,7 +89,7 @@ public abstract class CustomPlayersHandler<T extends CustomPlayer> extends Custo
 		// TODO: maybe make less?
 		if (server.tickManager().isFirstGameTickInSecond()) {
 			for (T p : values()) {
-				if (p instanceof Syncable) {
+				if (p instanceof Syncable && ((Syncable) p).isContinuousSync()) {
 					server.network.sendPacket(((Syncable) p).getSyncPacket(), server.getClientByAuth(p.auth));
 				}
 			}

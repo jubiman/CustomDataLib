@@ -100,18 +100,18 @@ publishing {
 			name = "GitHubPackages"
 			url 'https://maven.pkg.github.com/jubiman/CustomDataLib'
 			credentials {
-				username = System.getenv("githubUsername")
-				password = System.getenv("githubToken")
+				username = System.getenv("githubUsername") == null ? githubUsername : System.getenv("githubUsername")
+				password = System.getenv("githubToken") == null ? githubToken : System.getenv("githubToken")
 			}
 		}
-//		maven {
-//			name = "OSSRH"
-//			url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
-//			credentials {
-//				username = ossrhUsername
-//				password = ossrhPassword
-//			}
-//		}
+		maven {
+			name = "OSSRH"
+			url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+			credentials {
+				username = ossrhUsername
+				password = ossrhPassword
+			}
+		}
 	}
 	publications {
 		maven(MavenPublication) {
@@ -153,10 +153,10 @@ publishing {
 	}
 }
 
-//signing {
-//	sign configurations.archives
-//	sign publishing.publications.maven
-//}
+signing {
+	sign configurations.archives
+	sign publishing.publications.maven
+}
 
 task createAppID {
 	group "necesse"

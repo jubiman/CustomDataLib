@@ -22,12 +22,12 @@ public class Main { // just so it's loaded to upload it to steam workshop
 	 */
 	public void init() {
 		try {
+			// Load registries
 			Class.forName("com.jubiman.customdatalib.player.CustomPlayerRegistry");
-			Class.forName("com.jubiman.customdatalib.player.mob.CustomMobRegistry");
+			Class.forName("com.jubiman.customdatalib.mob.CustomMobRegistry");
 
 			// Register packets
 			PacketRegistry.registerPacket(PacketCreateClientSidePlayer.class);
-
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(e);
 		}
