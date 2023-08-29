@@ -1,11 +1,12 @@
 package com.jubiman.customdatalib.player;
 
 import com.jubiman.customdatalib.api.CustomData;
+import necesse.engine.network.server.Server;
 
 /**
  * The base for all custom player data classes
  */
-public class CustomPlayer extends CustomData {
+public abstract class CustomPlayer extends CustomData {
 	/**
 	 * The player's auth
 	 */
@@ -26,4 +27,10 @@ public class CustomPlayer extends CustomData {
 	public long getAuth() {
 		return auth;
 	}
+
+	/**
+	 * Called every server tick
+	 * @param server the server
+	 */
+	public abstract void serverTick(Server server);
 }

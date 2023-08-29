@@ -1,11 +1,12 @@
 package com.jubiman.customdatalib.mob;
 
 import com.jubiman.customdatalib.api.CustomData;
+import necesse.entity.mobs.Mob;
 
 /**
  * The base for all custom mob data classes
  */
-public class CustomMob extends CustomData {
+public abstract class CustomMob extends CustomData {
 	/**
 	 * The mob's id
 	 */
@@ -26,4 +27,10 @@ public class CustomMob extends CustomData {
 	public int getId() {
 		return id;
 	}
+
+	/**
+	 * Perform a server tick on the mob
+	 * @param mob the mob
+	 */
+	public abstract void serverTick(Mob mob);
 }
