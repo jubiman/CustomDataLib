@@ -85,8 +85,8 @@ public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
 	 * @param authentication the authentication of the player to save
 	 */
 	public void saveAll(SaveData save, Object authentication) {
+		SaveData customPlayerSave = new SaveData("CustomPlayerData");
 		for (CustomDataHandler<Long, ? extends CustomData> cps : registry.values()) {
-			SaveData customPlayerSave = new SaveData("CustomPlayerData");
 			cps.save(customPlayerSave, (Long) authentication);
 			save.addSaveData(customPlayerSave);
 		}
