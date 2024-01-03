@@ -1,9 +1,6 @@
 package com.jubiman.customdatalib.player;
 
-import com.jubiman.customdatalib.api.CustomData;
-import com.jubiman.customdatalib.api.CustomDataHandler;
-import com.jubiman.customdatalib.api.CustomDataRegistry;
-import com.jubiman.customdatalib.api.Syncable;
+import com.jubiman.customdatalib.api.*;
 import com.jubiman.customdatalib.environment.ClientEnvironment;
 import necesse.engine.GameEventListener;
 import necesse.engine.GameEvents;
@@ -83,7 +80,7 @@ public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
 					if (typeArg instanceof Class) {
 						Class<? extends CustomPlayer> playerClass = (Class<? extends CustomPlayer>) typeArg;
 						// Check if the playerClass implements the Syncable interface
-						if (Syncable.class.isAssignableFrom(playerClass)) {
+						if (Syncable.class.isAssignableFrom(playerClass) || HUDDrawable.class.isAssignableFrom(playerClass) || ClientTickable.class.isAssignableFrom(playerClass)) {
 							// Finally register the CustomPlayer
 							ClientEnvironment.registerCustomPlayer(identifier, (id) -> {
 								try {
