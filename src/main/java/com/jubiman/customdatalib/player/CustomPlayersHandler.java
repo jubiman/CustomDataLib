@@ -85,8 +85,12 @@ public abstract class CustomPlayersHandler<T extends CustomPlayer> extends Custo
 	 * @param server the server instance
 	 */
 	public void serverTick(Server server) {
+		// Tick all players
+		for (T p : values())
+			p.serverTick(server);
+
 		// Send sync packet every second
-		// TODO: maybe make less?
+		// TODO: improve this and probably delete it as it is very inefficient like this
 		if (server.tickManager().isFirstGameTickInSecond()) {
 			for (T p : values()) {
 				if (p instanceof Syncable && ((Syncable) p).isContinuousSync()) {

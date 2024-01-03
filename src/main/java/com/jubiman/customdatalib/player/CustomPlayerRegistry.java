@@ -1,9 +1,7 @@
 package com.jubiman.customdatalib.player;
 
-import com.jubiman.customdatalib.api.CustomData;
-import com.jubiman.customdatalib.api.CustomDataHandler;
-import com.jubiman.customdatalib.api.CustomDataRegistry;
-import com.jubiman.customdatalib.api.Syncable;
+import com.jubiman.customdatalib.api.*;
+import com.jubiman.customdatalib.environment.ClientEnvironment;
 import necesse.engine.GameEventListener;
 import necesse.engine.GameEvents;
 import necesse.engine.GameLog;
@@ -16,9 +14,12 @@ import necesse.engine.save.SaveData;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Registry where mods can register CustomPlayers
@@ -57,11 +58,45 @@ public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
 	 * @param identifier the name of the class
 	 * @param clazz      a reference to the class
 	 */
-	public static void registerClass(String identifier, Class<? extends CustomPlayersHandler<?>> clazz) {
+	public static void registerClass(String identifier, Class<? extends CustomPlayersHandler<? extends CustomPlayer>> clazz) {
 		try {
 			GameLog.debug.println("Registering CustomPlayersHandler class: " + identifier);
 			Constructor<? extends CustomPlayersHandler<?>> ctor = clazz.getDeclaredConstructor();
 			classHashMap.put(identifier, ctor);
+			// WHY DID I DO THIS???? DOES THIS EVEN WORK?????
+			// Check if the player (generic type) is syncable
+			Type superclass = clazz.getGenericSuperclass();
+			// Check if superclass is a parameterized type
+			if (superclass instanceof ParameterizedType) {
+				ParameterizedType parameterizedType = (ParameterizedType) superclass;
+
+				// Get the actual type arguments used for the superclass
+				Type[] typeArgs = parameterizedType.getActualTypeArguments();
+				// Check if there are type arguments
+				if (typeArgs.length > 0) {
+					// Get the first type argument (CustomPlayer)
+					Type typeArg = typeArgs[0];
+					// Check if the type argument is a class
+					if (typeArg instanceof Class) {
+						Class<? extends CustomPlayer> playerClass = (Class<? extends CustomPlayer>) typeArg;
+						// Check if the playerClass implements the Syncable interface
+						if (ClientSide.class.isAssignableFrom(playerClass)) {
+							// Finally register the CustomPlayer
+							ClientEnvironment.registerCustomPlayer(identifier, (id) -> {
+								try {
+									// Get the constructor of playerClass that accepts a Long parameter
+									java.lang.reflect.Constructor<? extends CustomPlayer> constructor = playerClass.getConstructor(Long.class);
+									// Invoke the constructor to create an instance
+									return constructor.newInstance(id);
+								} catch (Exception ex) {
+									ex.printStackTrace();
+									return null;
+								}
+							});
+						}
+					}
+				}
+			}
 		} catch (NoSuchMethodException e) {
 			throw new RuntimeException(e);
 		}
@@ -85,8 +120,8 @@ public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
 	 * @param authentication the authentication of the player to save
 	 */
 	public void saveAll(SaveData save, Object authentication) {
+		SaveData customPlayerSave = new SaveData("CustomPlayerData");
 		for (CustomDataHandler<Long, ? extends CustomData> cps : registry.values()) {
-			SaveData customPlayerSave = new SaveData("CustomPlayerData");
 			cps.save(customPlayerSave, (Long) authentication);
 			save.addSaveData(customPlayerSave);
 		}

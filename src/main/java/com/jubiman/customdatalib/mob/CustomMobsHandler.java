@@ -84,5 +84,7 @@ public class CustomMobsHandler<T extends CustomMob> extends CustomDataHandler<In
 	 */
 	public void serverTick(Mob mob) {
 		// TODO: Might need some stuff, maybe not?
+		for (T p : values())
+			p.serverTick(mob);
 	}
 }

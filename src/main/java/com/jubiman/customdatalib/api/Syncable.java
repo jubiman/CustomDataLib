@@ -6,7 +6,7 @@ import necesse.engine.network.Packet;
  * This interface defines that the client and server must sync their data, usually because the client needs it for
  * client side ticking, like HUD elements.
  */
-public interface Syncable {
+public interface Syncable extends ClientSide {
 	/**
 	 * Returns whether the data should be synced continuously or only once.
 	 * @return true if the data should be synced continuously, false if only once
