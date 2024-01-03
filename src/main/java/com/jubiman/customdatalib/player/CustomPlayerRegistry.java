@@ -80,7 +80,7 @@ public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
 					if (typeArg instanceof Class) {
 						Class<? extends CustomPlayer> playerClass = (Class<? extends CustomPlayer>) typeArg;
 						// Check if the playerClass implements the Syncable interface
-						if (Syncable.class.isAssignableFrom(playerClass) || HUDDrawable.class.isAssignableFrom(playerClass) || ClientTickable.class.isAssignableFrom(playerClass)) {
+						if (ClientTickable.class.isAssignableFrom(playerClass)) {
 							// Finally register the CustomPlayer
 							ClientEnvironment.registerCustomPlayer(identifier, (id) -> {
 								try {
