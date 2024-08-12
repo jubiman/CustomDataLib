@@ -6,7 +6,7 @@ import com.jubiman.customdatalib.api.HUDDrawable;
 import com.jubiman.customdatalib.player.CustomPlayer;
 import necesse.engine.GameLog;
 import necesse.engine.network.client.Client;
-import necesse.engine.tickManager.TickManager;
+import necesse.engine.gameLoop.tickManager.TickManager;
 import necesse.entity.mobs.PlayerMob;
 
 import java.awt.*;

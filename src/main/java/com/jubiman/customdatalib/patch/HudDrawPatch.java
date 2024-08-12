@@ -2,7 +2,7 @@ package com.jubiman.customdatalib.patch;
 
 import com.jubiman.customdatalib.environment.ClientEnvironment;
 import necesse.engine.modLoader.annotations.ModMethodPatch;
-import necesse.engine.tickManager.TickManager;
+import necesse.engine.gameLoop.tickManager.TickManager;
 import necesse.entity.mobs.PlayerMob;
 import necesse.gfx.forms.components.FormBuffHud;
 import net.bytebuddy.asm.Advice;

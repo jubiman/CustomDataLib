@@ -1,6 +1,6 @@
 package com.jubiman.customdatalib.api;
 
-import necesse.engine.tickManager.TickManager;
+import necesse.engine.gameLoop.tickManager.TickManager;
 import necesse.entity.mobs.PlayerMob;
 
 import java.awt.*;
