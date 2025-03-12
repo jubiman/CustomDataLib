@@ -3,9 +3,9 @@ package com.jubiman.customdatalib.mob;
 import com.jubiman.customdatalib.api.CustomData;
 import com.jubiman.customdatalib.api.CustomDataHandler;
 import com.jubiman.customdatalib.api.CustomDataRegistry;
+import com.jubiman.customdatalib.util.Logger;
 import necesse.engine.GameEventListener;
 import necesse.engine.GameEvents;
-import necesse.engine.GameLog;
 import necesse.engine.events.ServerStartEvent;
 import necesse.engine.events.ServerStopEvent;
 import necesse.engine.save.LoadData;
@@ -43,9 +43,8 @@ public class CustomMobRegistry extends CustomDataRegistry<Integer> {
 		GameEvents.addListener(ServerStartEvent.class, new GameEventListener<ServerStartEvent>() {
 			@Override
 			public void onEvent(ServerStartEvent e) {
-				System.out.println("Registering all CustomMobsHandler classes: " + Arrays.toString(classHashMap.keySet().toArray()));
+				Logger.info("Registering all CustomMobsHandler classes: " + Arrays.toString(classHashMap.keySet().toArray()));
 				INSTANCE.registerAll();
-				GameLog.debug.println("Registered all CustomMobsHandler classes");
 			}
 		});
 	}
@@ -58,7 +57,7 @@ public class CustomMobRegistry extends CustomDataRegistry<Integer> {
 	 */
 	public static void registerClass(String identifier, Class<? extends CustomMobsHandler<?>> clazz) {
 		try {
-			GameLog.debug.println("Registering CustomMobsHandler class: " + identifier);
+			Logger.debug("Registering CustomMobsHandler class: " + identifier);
 			Constructor<? extends CustomMobsHandler<?>> ctor = clazz.getDeclaredConstructor();
 			classHashMap.put(identifier, ctor);
 		} catch (NoSuchMethodException e) {
@@ -121,11 +120,11 @@ public class CustomMobRegistry extends CustomDataRegistry<Integer> {
 	private void registerAll() {
 		for (Map.Entry<String, Constructor<? extends CustomMobsHandler<?>>> entry : classHashMap.entrySet()) {
 			try {
-				GameLog.debug.println("Instantiating a new object for " + entry.getValue().getDeclaringClass().getName());
+				Logger.debug("Instantiating a new object for " + entry.getValue().getDeclaringClass().getName());
 				CustomMobsHandler<?> instance = entry.getValue().newInstance();
 				register(entry.getKey(), instance);
 			} catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-				System.err.println("Failed to instantiate a new object for " + entry.getValue().getDeclaringClass().getName());
+				Logger.error("Failed to instantiate a new object for " + entry.getValue().getDeclaringClass().getName());
 				e.printStackTrace();
 			}
 		}

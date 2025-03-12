@@ -91,12 +91,12 @@ public abstract class CustomPlayersHandler<T extends CustomPlayer> extends Custo
 
 		// Send sync packet every second
 		// TODO: improve this and probably delete it as it is very inefficient like this
-		if (server.tickManager().isFirstGameTickInSecond()) {
-			for (T p : values()) {
-				if (p instanceof Syncable && ((Syncable) p).isContinuousSync()) {
-					server.network.sendPacket(((Syncable) p).getSyncPacket(), server.getClientByAuth(p.auth));
-				}
-			}
-		}
+//		if (server.tickManager().isFirstGameTickInSecond()) {
+//			for (T p : values()) {
+//				if (p instanceof Syncable && ((Syncable) p).isContinuousSync()) {
+//					server.network.sendPacket(((Syncable) p).getSyncPacket(), server.getClientByAuth(p.auth));
+//				}
+//			}
+//		}
 	}
 }

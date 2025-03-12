@@ -2,9 +2,9 @@ package com.jubiman.customdatalib.player;
 
 import com.jubiman.customdatalib.api.*;
 import com.jubiman.customdatalib.environment.ClientEnvironment;
+import com.jubiman.customdatalib.util.Logger;
 import necesse.engine.GameEventListener;
 import necesse.engine.GameEvents;
-import necesse.engine.GameLog;
 import necesse.engine.events.ServerStartEvent;
 import necesse.engine.events.ServerStopEvent;
 import necesse.engine.network.server.Server;
@@ -39,15 +39,15 @@ public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
 		GameEvents.addListener(ServerStopEvent.class, new GameEventListener<ServerStopEvent>() {
 			@Override
 			public void onEvent(ServerStopEvent e) {
-				// TODO
+				INSTANCE.stopAll();
+				Logger.debug("Stopped all CustomPlayersHandler classes");
 			}
 		});
 		GameEvents.addListener(ServerStartEvent.class, new GameEventListener<ServerStartEvent>() {
 			@Override
 			public void onEvent(ServerStartEvent e) {
-				System.out.println("Registering all CustomPlayersHandler classes: " + Arrays.toString(classHashMap.keySet().toArray()));
+				Logger.info("Registering all CustomPlayersHandler classes: " + Arrays.toString(classHashMap.keySet().toArray()));
 				INSTANCE.registerAll();
-				GameLog.debug.println("Registered all CustomPlayersHandler classes");
 			}
 		});
 	}
@@ -60,7 +60,7 @@ public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
 	 */
 	public static void registerClass(String identifier, Class<? extends CustomPlayersHandler<? extends CustomPlayer>> clazz) {
 		try {
-			GameLog.debug.println("Registering CustomPlayersHandler class: " + identifier);
+			Logger.info("Registering CustomPlayersHandler class: " + identifier);
 			Constructor<? extends CustomPlayersHandler<?>> ctor = clazz.getDeclaredConstructor();
 			classHashMap.put(identifier, ctor);
 			// WHY DID I DO THIS???? DOES THIS EVEN WORK?????
@@ -122,6 +122,7 @@ public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
 	public void saveAll(SaveData save, Object authentication) {
 		SaveData customPlayerSave = new SaveData("CustomPlayerData");
 		for (CustomDataHandler<Long, ? extends CustomData> cps : registry.values()) {
+			Logger.info("Saving data for " + cps.handlerName);
 			cps.save(customPlayerSave, (Long) authentication);
 			save.addSaveData(customPlayerSave);
 		}
@@ -135,8 +136,17 @@ public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
 	 */
 	public void loadAllEnter(LoadData data, long authentication) {
 		LoadData playerData = data.getFirstLoadDataByName("CustomPlayerData");
-		for (Map.Entry<String, CustomDataHandler<Long, ? extends CustomData>> entry : registry.entrySet())
-			((CustomPlayersHandler<? extends CustomPlayer>) entry.getValue()).loadEnter(playerData.getFirstLoadDataByName(entry.getKey()), authentication);
+		for (Map.Entry<String, CustomDataHandler<Long, ? extends CustomData>> entry : registry.entrySet()) {
+			// Check if the mod has valid data
+			LoadData modData = playerData.getFirstLoadDataByName(entry.getKey());
+			if (modData == null) {
+				Logger.info("No data found for " + entry.getKey());
+				continue;
+			}
+			// Load the data
+			Logger.info("Loading data for " + entry.getKey());
+			((CustomPlayersHandler<? extends CustomPlayer>) entry.getValue()).loadEnter(modData, authentication);
+		}
 	}
 
 	/**
@@ -147,8 +157,17 @@ public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
 	 */
 	public void loadAllExit(LoadData data, long authentication) {
 		LoadData playerData = data.getFirstLoadDataByName("CustomPlayerData");
-		for (Map.Entry<String, CustomDataHandler<Long, ? extends CustomData>> entry : registry.entrySet())
-			((CustomPlayersHandler<? extends CustomPlayer>) entry.getValue()).loadExit(playerData.getFirstLoadDataByName(entry.getKey()), authentication);
+		for (Map.Entry<String, CustomDataHandler<Long, ? extends CustomData>> entry : registry.entrySet()) {
+			// Check if the mod has valid data
+			LoadData modData = playerData.getFirstLoadDataByName(entry.getKey());
+			if (modData == null) {
+				Logger.info("No data found for " + entry.getKey());
+				continue;
+			}
+			// Load the data
+			Logger.info("Loading data for " + entry.getKey());
+			((CustomPlayersHandler<? extends CustomPlayer>) entry.getValue()).loadExit(modData, authentication);
+		}
 	}
 
 	/**
@@ -158,15 +177,15 @@ public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
 		// TODO: call this class some time
 		for (Map.Entry<String, Constructor<? extends CustomPlayersHandler<?>>> entry : classHashMap.entrySet()) {
 			try {
-				GameLog.debug.println("Instantiating a new object for " + entry.getValue().getDeclaringClass().getName());
+				Logger.debug("Instantiating a new object for " + entry.getValue().getDeclaringClass().getName());
 				CustomPlayersHandler<?> instance = entry.getValue().newInstance();
 				register(entry.getKey(), instance);
 			} catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-				System.err.println("Failed to instantiate a new object for " + entry.getValue().getDeclaringClass().getName());
+				Logger.error("Failed to instantiate a new object for " + entry.getValue().getDeclaringClass().getName());
 				e.printStackTrace();
 				// TODO: Decide if we should throw an exception here to crash the game
 			}
-			GameLog.debug.println("Pls rubber duckie help me");
+			Logger.info("Pls rubber duckie help me");
 		}
 	}
 
@@ -196,6 +215,7 @@ public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
 		for (CustomDataHandler<Long, ? extends CustomData> handler : registry.values()) {
 			CustomData player = handler.get(authentication);
 			if (player instanceof Syncable) {
+				Logger.debug("Sending sync packet for " + player);
 				serverClient.sendPacket(((Syncable) player).getSyncPacket());
 			}
 		}

@@ -9,8 +9,8 @@ plugins {
 
 project.ext.modID = "com.jubiman.customdatalib" // The unique id of your mod. Must be all lowercase and cannot use special characters.
 project.ext.modName = "CustomDataLib" // The display name of your mod.
-project.ext.modVersion = "1.5" // Your current builds version. Must follow the xx.xx... format.
-project.ext.gameVersion = "0.26.0" // The target game version.
+project.ext.modVersion = "1.6" // Your current builds version. Must follow the xx.xx... format.
+project.ext.gameVersion = "0.31.1" // The target game version.
 project.ext.modDescription = "Base implementation for custom data data" // Short description of what your mod is.
 project.ext.author = "Jubiman" // Your name
 
@@ -35,7 +35,7 @@ import org.apache.tools.ant.taskdefs.condition.Os
 if (Os.isFamily(Os.FAMILY_WINDOWS)) {
 	gameDirectory = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Necesse"
 } else if (Os.isFamily(Os.FAMILY_UNIX)) {
-	gameDirectory = "/home/jubiman/.local/share/Steam/steamapps/common/Necesse"
+	gameDirectory = "${System.properties['user.home']}/.local/share/Steam/steamapps/common/Necesse"
 } else {
 	throw new Exception("Unsupported OS")
 }
@@ -47,6 +47,7 @@ if (Os.isFamily(Os.FAMILY_WINDOWS)) {
 def jarName = "${project.ext.modName.replace(" ", "")}-${project.ext.gameVersion}-${project.ext.modVersion}"
 
 group project.ext.modID
+archivesBaseName = "${project.ext.modName.replace(" ", "")}-${project.ext.gameVersion}"
 version project.ext.modVersion
 
 setSourceCompatibility(JavaVersion.VERSION_1_8)
@@ -126,7 +127,7 @@ publishing {
 				name = 'Custom Data Lib'
 				packaging = 'jar'
 				// optionally artifactId can be defined here
-				description = 'Library for adding custom data to an entity'
+				description = 'Library for adding custom data to an entity in the game Necesse'
 				url = 'https://github.com/jubiman/CustomDataLib'
 
 				scm {
@@ -146,6 +147,7 @@ publishing {
 					developer {
 						id = 'Jubiman'
 						name = 'Melle Bosboom'
+						email = 'necesse@jubiman.com'
 					}
 				}
 			}

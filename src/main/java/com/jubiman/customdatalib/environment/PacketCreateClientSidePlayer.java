@@ -1,6 +1,6 @@
 package com.jubiman.customdatalib.environment;
 
-import necesse.engine.GameLog;
+import com.jubiman.customdatalib.util.Logger;
 import necesse.engine.network.NetworkPacket;
 import necesse.engine.network.Packet;
 import necesse.engine.network.PacketReader;
@@ -45,7 +45,7 @@ public class PacketCreateClientSidePlayer extends Packet {
 	 */
 	@Override
 	public void processClient(NetworkPacket packet, Client client) {
-		GameLog.debug.println("PacketCreateClientSidePlayer.processClient: " + auth);
+		Logger.debug("PacketCreateClientSidePlayer.processClient: " + auth);
 		ClientEnvironment.createPlayers(auth);
 	}
 }

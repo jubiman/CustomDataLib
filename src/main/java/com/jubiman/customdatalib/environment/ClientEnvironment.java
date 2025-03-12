@@ -4,7 +4,7 @@ import com.jubiman.customdatalib.api.ClientTickable;
 import com.jubiman.customdatalib.api.CustomData;
 import com.jubiman.customdatalib.api.HUDDrawable;
 import com.jubiman.customdatalib.player.CustomPlayer;
-import necesse.engine.GameLog;
+import com.jubiman.customdatalib.util.Logger;
 import necesse.engine.network.client.Client;
 import necesse.engine.gameLoop.tickManager.TickManager;
 import necesse.entity.mobs.PlayerMob;
@@ -36,7 +36,7 @@ public class ClientEnvironment {
 	 * @param ctor    the constructor of the CustomPlayer to register
 	 */
 	public static void registerCustomPlayer(String modName, Function<Long, ? extends CustomPlayer> ctor) {
-		GameLog.debug.println("Registering client-side CustomPlayer for: " + modName);
+		Logger.debug("Registering client-side CustomPlayer for: " + modName);
 		registeredPlayers.put(modName, ctor);
 	}
 
@@ -72,7 +72,7 @@ public class ClientEnvironment {
 	 */
 	static void createPlayers(long auth) {
 		for (Map.Entry<String, Function<Long, ? extends CustomPlayer>> entry : registeredPlayers.entrySet()) {
-			GameLog.debug.println("Creating player for " + entry.getKey());
+			Logger.debug("Creating player for " + entry.getKey());
 			customDataHashMap.put(entry.getKey(), entry.getValue().apply(auth));
 		}
 	}
