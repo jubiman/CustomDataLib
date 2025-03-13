@@ -47,6 +47,15 @@ public class CustomClientRegistry {
 	}
 
 	/**
+	 * Gets a CustomClient from the client-side registry
+	 * @param name the name of the CustomClient to get
+	 * @return the CustomClient
+	 */
+	public static CustomData get(String name) {
+		return customDataHashMap.get(name);
+	}
+
+	/**
 	 * Client ticks all registered CustomClient. Please do not call this function as it's called every tick when Necesse's client ticks.
 	 *
 	 * @param client the client to tick from
@@ -89,11 +98,9 @@ public class CustomClientRegistry {
 	}
 
 	/**
-	 * Gets a CustomClient from the client-side registry
-	 * @param name the name of the CustomClient to get
-	 * @return the CustomClient
+	 * Destroys all registered CustomClients. Please do not call this function as it's called when Necesse's client gets destroyed.
 	 */
-	public static CustomData get(String name) {
-		return customDataHashMap.get(name);
+	static void destroyClients() {
+		customDataHashMap.clear();
 	}
 }

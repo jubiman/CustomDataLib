@@ -13,19 +13,9 @@ import necesse.engine.network.client.Client;
  */
 public class PacketCreateClientSidePlayer extends Packet {
 	/**
-	 * The auth of the player to create
-	 */
-	public final long auth;
-
-	/**
 	 * Creates a new PacketCreateClientSidePlayer
-	 * @param auth the auth of the player to create
 	 */
-	public PacketCreateClientSidePlayer(long auth) {
-		this.auth = auth;
-
-		PacketWriter writer = new PacketWriter(this);
-		writer.putNextLong(auth);
+	public PacketCreateClientSidePlayer() {
 	}
 
 	/**
@@ -34,8 +24,6 @@ public class PacketCreateClientSidePlayer extends Packet {
 	 */
 	public PacketCreateClientSidePlayer(byte[] data) {
 		super(data);
-		PacketReader reader = new PacketReader(this);
-		auth = reader.getNextLong();
 	}
 
 	/**

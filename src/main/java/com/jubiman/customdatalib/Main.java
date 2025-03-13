@@ -1,6 +1,7 @@
 package com.jubiman.customdatalib;
 
 import com.jubiman.customdatalib.client.PacketCreateClientSidePlayer;
+import com.jubiman.customdatalib.client.PacketDestroyClient;
 import com.jubiman.customdatalib.player.CustomPlayerRegistry;
 import necesse.engine.GameEventListener;
 import necesse.engine.GameEvents;
@@ -8,6 +9,7 @@ import necesse.engine.events.ServerClientConnectedEvent;
 import necesse.engine.events.ServerClientDisconnectEvent;
 import necesse.engine.events.ServerStopEvent;
 import necesse.engine.modLoader.annotations.ModEntry;
+import necesse.engine.network.server.ServerClient;
 import necesse.engine.registries.PacketRegistry;
 
 /**
@@ -28,6 +30,7 @@ public class Main { // just so it's loaded to upload it to steam workshop
 
 			// Register packets
 			PacketRegistry.registerPacket(PacketCreateClientSidePlayer.class);
+			PacketRegistry.registerPacket(PacketDestroyClient.class);
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(e);
 		}
@@ -41,6 +44,9 @@ public class Main { // just so it's loaded to upload it to steam workshop
 		GameEvents.addListener(ServerStopEvent.class, new GameEventListener<ServerStopEvent>() {
 			@Override
 			public void onEvent(ServerStopEvent e) {
+				for (ServerClient client : e.server.getClients()) {
+					client.sendPacket(new PacketDestroyClient());
+				}
 				CustomPlayerRegistry.INSTANCE.stopAll();
 			}
 		});
@@ -54,7 +60,7 @@ public class Main { // just so it's loaded to upload it to steam workshop
 			@Override
 			public void onEvent(ServerClientConnectedEvent e) {
 				// Tell the client to create a new player
-				e.client.sendPacket(new PacketCreateClientSidePlayer(e.client.authentication));
+				e.client.sendPacket(new PacketCreateClientSidePlayer());
 
 				// Sync the saved data with the client
 				CustomPlayerRegistry.INSTANCE.sendSyncPackets(e.client.authentication, e.client);
