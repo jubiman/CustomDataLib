@@ -2,6 +2,9 @@ package com.jubiman.customdatalib.util;
 
 import necesse.engine.GameLog;
 
+/**
+ * A utility class for logging messages to the game log.
+ */
 public class Logger {
 	/**
 	 * Logs an info message to the game log.
