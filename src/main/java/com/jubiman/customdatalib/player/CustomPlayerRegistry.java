@@ -124,8 +124,8 @@ public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
 		for (CustomDataHandler<Long, ? extends CustomData> cps : registry.values()) {
 			Logger.info("Saving data for " + cps.handlerName);
 			cps.save(customPlayerSave, (Long) authentication);
-			save.addSaveData(customPlayerSave);
 		}
+		save.addSaveData(customPlayerSave);
 	}
 
 	/**
