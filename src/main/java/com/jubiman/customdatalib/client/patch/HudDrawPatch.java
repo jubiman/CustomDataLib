@@ -1,6 +1,6 @@
-package com.jubiman.customdatalib.patch;
+package com.jubiman.customdatalib.client.patch;
 
-import com.jubiman.customdatalib.environment.ClientEnvironment;
+import com.jubiman.customdatalib.client.CustomClientRegistry;
 import necesse.engine.modLoader.annotations.ModMethodPatch;
 import necesse.engine.gameLoop.tickManager.TickManager;
 import necesse.entity.mobs.PlayerMob;
@@ -16,6 +16,6 @@ import java.awt.Rectangle;
 public class HudDrawPatch {
 	@Advice.OnMethodExit
 	static void onExit(@Advice.Argument(0) TickManager tickManager, @Advice.Argument(1) PlayerMob player, @Advice.Argument(2) Rectangle rectangle) {
-		ClientEnvironment.hudDrawAll(tickManager, player, rectangle);
+		CustomClientRegistry.hudDrawAll(tickManager, player, rectangle);
 	}
 }

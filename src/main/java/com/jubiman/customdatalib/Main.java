@@ -1,6 +1,6 @@
 package com.jubiman.customdatalib;
 
-import com.jubiman.customdatalib.environment.PacketCreateClientSidePlayer;
+import com.jubiman.customdatalib.client.PacketCreateClientSidePlayer;
 import com.jubiman.customdatalib.player.CustomPlayerRegistry;
 import necesse.engine.GameEventListener;
 import necesse.engine.GameEvents;

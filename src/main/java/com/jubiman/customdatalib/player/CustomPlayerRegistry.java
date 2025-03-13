@@ -1,12 +1,14 @@
 package com.jubiman.customdatalib.player;
 
 import com.jubiman.customdatalib.api.*;
-import com.jubiman.customdatalib.environment.ClientEnvironment;
+import com.jubiman.customdatalib.client.CustomClientRegistry;
+import com.jubiman.customdatalib.client.CustomClient;
 import com.jubiman.customdatalib.util.Logger;
 import necesse.engine.GameEventListener;
 import necesse.engine.GameEvents;
 import necesse.engine.events.ServerStartEvent;
 import necesse.engine.events.ServerStopEvent;
+import necesse.engine.network.client.Client;
 import necesse.engine.network.server.Server;
 import necesse.engine.network.server.ServerClient;
 import necesse.engine.save.LoadData;
@@ -63,40 +65,6 @@ public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
 			Logger.info("Registering CustomPlayersHandler class: " + identifier);
 			Constructor<? extends CustomPlayersHandler<?>> ctor = clazz.getDeclaredConstructor();
 			classHashMap.put(identifier, ctor);
-			// WHY DID I DO THIS???? DOES THIS EVEN WORK?????
-			// Check if the player (generic type) is syncable
-			Type superclass = clazz.getGenericSuperclass();
-			// Check if superclass is a parameterized type
-			if (superclass instanceof ParameterizedType) {
-				ParameterizedType parameterizedType = (ParameterizedType) superclass;
-
-				// Get the actual type arguments used for the superclass
-				Type[] typeArgs = parameterizedType.getActualTypeArguments();
-				// Check if there are type arguments
-				if (typeArgs.length > 0) {
-					// Get the first type argument (CustomPlayer)
-					Type typeArg = typeArgs[0];
-					// Check if the type argument is a class
-					if (typeArg instanceof Class) {
-						Class<? extends CustomPlayer> playerClass = (Class<? extends CustomPlayer>) typeArg;
-						// Check if the playerClass implements the Syncable interface
-						if (ClientSide.class.isAssignableFrom(playerClass)) {
-							// Finally register the CustomPlayer
-							ClientEnvironment.registerCustomPlayer(identifier, (id) -> {
-								try {
-									// Get the constructor of playerClass that accepts a Long parameter
-									java.lang.reflect.Constructor<? extends CustomPlayer> constructor = playerClass.getConstructor(Long.class);
-									// Invoke the constructor to create an instance
-									return constructor.newInstance(id);
-								} catch (Exception ex) {
-									ex.printStackTrace();
-									return null;
-								}
-							});
-						}
-					}
-				}
-			}
 		} catch (NoSuchMethodException e) {
 			throw new RuntimeException(e);
 		}

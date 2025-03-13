@@ -3,6 +3,6 @@ com.jubiman.customdatalib.api
 com.jubiman.customdatalib.environment
 com.jubiman.customdatalib.mob
 com.jubiman.customdatalib.mob.patch
-com.jubiman.customdatalib.patch
+com.jubiman.customdatalib.client.patch
 com.jubiman.customdatalib.player
 com.jubiman.customdatalib.player.patch

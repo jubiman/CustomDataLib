@@ -1,6 +1,6 @@
-package com.jubiman.customdatalib.patch;
+package com.jubiman.customdatalib.client.patch;
 
-import com.jubiman.customdatalib.environment.ClientEnvironment;
+import com.jubiman.customdatalib.client.CustomClientRegistry;
 import necesse.engine.modLoader.annotations.ModMethodPatch;
 import necesse.engine.network.client.Client;
 import net.bytebuddy.asm.Advice;
@@ -12,6 +12,6 @@ import net.bytebuddy.asm.Advice;
 public class ClientTickPatch {
 	@Advice.OnMethodExit
 	static void onExit(@Advice.This Client client) {
-		ClientEnvironment.clientTickAll(client);
+		CustomClientRegistry.clientTickAll(client);
 	}
 }
