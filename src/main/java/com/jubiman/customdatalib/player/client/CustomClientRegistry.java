@@ -33,10 +33,10 @@ public class CustomClientRegistry extends CustomDataRegistry<Long> {
 	 * @param identifier the identifier of the {@link CustomClient}
 	 * @param clazz    the class object of the {@link CustomClient} that implements {@link NeedsClientSideObject}
 	 */
-	public static void registerCustomClient(String identifier, Class<ClientPlayersHandler<? extends CustomClient>> clazz) {
+	public static void registerCustomClient(String identifier, Class<? extends ClientPlayersHandler<? extends CustomClient>> clazz) {
 		try {
 			Logger.debug("Registering client-side CustomClient for: " + identifier);
-			Constructor<ClientPlayersHandler<? extends CustomClient>> ctor = clazz.getDeclaredConstructor(Long.class);
+			Constructor<? extends ClientPlayersHandler<? extends CustomClient>> ctor = clazz.getDeclaredConstructor(Long.class);
 			clientCtorMap.put(identifier, ctor);
 		} catch (NoSuchMethodException e) {
 			throw new RuntimeException(e);
