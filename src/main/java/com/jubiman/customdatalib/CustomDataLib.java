@@ -21,7 +21,7 @@ import necesse.engine.registries.PacketRegistry;
  * instead of one Registry object per mod.
  */
 @ModEntry
-public class Main { // just so it's loaded to upload it to steam workshop
+public class CustomDataLib { // just so it's loaded to upload it to steam workshop
 	/**
 	 * Initializes the mod, called by Necesse
 	 */
