@@ -36,7 +36,7 @@ public class CustomClientRegistry extends CustomDataRegistry<Long> {
 	public static void registerCustomClient(String identifier, Class<? extends ClientPlayersHandler<? extends CustomClient>> clazz) {
 		try {
 			Logger.debug("Registering client-side CustomClient for: " + identifier);
-			Constructor<? extends ClientPlayersHandler<? extends CustomClient>> ctor = clazz.getDeclaredConstructor(Long.class);
+			Constructor<? extends ClientPlayersHandler<? extends CustomClient>> ctor = clazz.getDeclaredConstructor();
 			clientCtorMap.put(identifier, ctor);
 		} catch (NoSuchMethodException e) {
 			throw new RuntimeException(e);
