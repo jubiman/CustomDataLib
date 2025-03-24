@@ -1,7 +1,6 @@
 package com.jubiman.customdatalib.player.client;
 
 import com.jubiman.customdatalib.api.*;
-import com.jubiman.customdatalib.player.CustomPlayer;
 import com.jubiman.customdatalib.util.Logger;
 import necesse.engine.network.client.Client;
 import necesse.engine.gameLoop.tickManager.TickManager;
@@ -24,21 +23,20 @@ public class CustomClientRegistry extends CustomDataRegistry<Long> {
 	/**
 	 * A HashMap containing all mods' custom clients
 	 */
-	private static final HashMap<String, Constructor<? extends ClientPlayersHandler<?>>> clientCtorMap = new HashMap<>();
+	private static final HashMap<String, Constructor<? extends ClientPlayersHandler<? extends CustomClient>>> clientCtorMap = new HashMap<>();
 
 	/**
-	 * Registers a {@link CustomPlayer} to the client-side registry.
+	 * Registers a {@link CustomClient} to the client-side registry.
 	 * This could be the same class used on the server-side, but could also be a different class.
-	 * Having the same object as the server-side {@link CustomPlayer} could lead to unnecessary memory usage, so it's recommended to use a different class.
+	 * Having the same object as the server-side {@link CustomClient} could lead to unnecessary memory usage, so it's recommended to use a different class.
 	 *
-	 * @param identifier the identifier of the {@link CustomPlayer}
-	 * @param clazz    the class object of the {@link CustomPlayer} that implements {@link NeedsClientSideObject}
-	 * @param <T>      the class extending {@link CustomPlayer} and {@link NeedsClientSideObject}
+	 * @param identifier the identifier of the {@link CustomClient}
+	 * @param clazz    the class object of the {@link CustomClient} that implements {@link NeedsClientSideObject}
 	 */
-	public static <T extends CustomPlayer & NeedsClientSideObject> void registerCustomClient(String identifier, Class<ClientPlayersHandler<T>> clazz) {
+	public static void registerCustomClient(String identifier, Class<ClientPlayersHandler<? extends CustomClient>> clazz) {
 		try {
 			Logger.debug("Registering client-side CustomClient for: " + identifier);
-			Constructor<ClientPlayersHandler<T>> ctor = clazz.getDeclaredConstructor(Long.class);
+			Constructor<ClientPlayersHandler<? extends CustomClient>> ctor = clazz.getDeclaredConstructor(Long.class);
 			clientCtorMap.put(identifier, ctor);
 		} catch (NoSuchMethodException e) {
 			throw new RuntimeException(e);
@@ -91,7 +89,7 @@ public class CustomClientRegistry extends CustomDataRegistry<Long> {
 	}
 
 	/**
-	 * Destroys all registered {@link CustomPlayer}s.
+	 * Destroys all registered {@link CustomClient}s.
 	 */
 	void destroyClients() {
 		for (CustomDataHandler<Long, ? extends CustomData> cps : registry.values())

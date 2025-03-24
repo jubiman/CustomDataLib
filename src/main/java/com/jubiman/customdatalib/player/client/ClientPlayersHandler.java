@@ -1,14 +1,12 @@
 package com.jubiman.customdatalib.player.client;
 
 import com.jubiman.customdatalib.api.CustomDataHandler;
-import com.jubiman.customdatalib.api.NeedsClientSideObject;
-import com.jubiman.customdatalib.player.CustomPlayer;
 
 /**
  * The storage class for custom players on the client side
  * @param <T> the class extending CustomPlayer and NeedsClientSideObject
  */
-public class ClientPlayersHandler<T extends CustomPlayer & NeedsClientSideObject> extends CustomDataHandler<Long, T> {
+public class ClientPlayersHandler<T extends CustomClient> extends CustomDataHandler<Long, T> {
 	/**
 	 * Constructs the storage class for custom players
 	 *

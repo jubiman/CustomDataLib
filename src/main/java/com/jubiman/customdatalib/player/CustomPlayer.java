@@ -10,7 +10,7 @@ public abstract class CustomPlayer extends CustomData {
 	/**
 	 * The player's auth
 	 */
-	protected final long auth;
+	public final long auth;
 
 	/**
 	 * Create a new CustomPlayer
@@ -24,6 +24,7 @@ public abstract class CustomPlayer extends CustomData {
 	 * Get the player's auth
 	 * @return the player's auth
 	 */
+	@Deprecated
 	public long getAuth() {
 		return auth;
 	}
