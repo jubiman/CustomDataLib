@@ -1,6 +1,7 @@
-package com.jubiman.customdatalib.client.patch;
+package com.jubiman.customdatalib.player.client.patch;
 
-import com.jubiman.customdatalib.client.CustomClientRegistry;
+import com.jubiman.customdatalib.player.CustomPlayerRegistry;
+import com.jubiman.customdatalib.player.client.CustomClientRegistry;
 import necesse.engine.modLoader.annotations.ModMethodPatch;
 import necesse.engine.gameLoop.tickManager.TickManager;
 import necesse.entity.mobs.PlayerMob;

@@ -8,7 +8,7 @@ import java.awt.*;
 /**
  * Specifies that the CustomPlayer is drawable on the HUD
  */
-public interface HUDDrawable extends ClientSide {
+public interface HUDDrawable extends NeedsClientSideObject {
 	/**
 	 * Draws the HUD.
 	 *

@@ -2,7 +2,6 @@ package com.jubiman.customdatalib.player;
 
 import com.jubiman.customdatalib.api.CustomDataHandler;
 import com.jubiman.customdatalib.api.Savable;
-import com.jubiman.customdatalib.api.Syncable;
 import necesse.engine.network.server.Server;
 import necesse.engine.save.LoadData;
 import necesse.engine.save.SaveData;
@@ -47,7 +46,7 @@ public abstract class CustomPlayersHandler<T extends CustomPlayer> extends Custo
 	 */
 	public void loadEnter(LoadData loadData, long auth) {
 		T p = get(auth);
-		if (p instanceof Savable) // TODO: should always be true?
+		if (p instanceof Savable)
 			((Savable) p).loadEnter(loadData);
 	}
 
@@ -61,22 +60,6 @@ public abstract class CustomPlayersHandler<T extends CustomPlayer> extends Custo
 		T p = get(auth);
 		if (p instanceof Savable)
 			((Savable) p).loadExit(loadData);
-	}
-
-	/**
-	 * When switching worlds or on server stop this will be called to avoid overwriting data in other (older) worlds
-	 */
-	public void stop() {
-		userMap.clear(); // avoid overwriting other worlds
-	}
-
-	/**
-	 * Removes a player from the map
-	 *
-	 * @param authentication the authentication of the player to remove
-	 */
-	public void remove(long authentication) {
-		userMap.remove(authentication);
 	}
 
 	/**

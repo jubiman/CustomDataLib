@@ -5,7 +5,7 @@ import necesse.engine.network.client.Client;
 /**
  * Specifies that the CustomPlayer(sHandler) is tickable on the client-side
  */
-public interface ClientTickable extends ClientSide {
+public interface ClientTickable extends NeedsClientSideObject {
 	/**
 	 * Performs a client tick
 	 *

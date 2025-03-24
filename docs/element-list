@@ -1,9 +1,9 @@
 com.jubiman.customdatalib
 com.jubiman.customdatalib.api
-com.jubiman.customdatalib.client
-com.jubiman.customdatalib.client.patch
 com.jubiman.customdatalib.mob
 com.jubiman.customdatalib.mob.patch
 com.jubiman.customdatalib.player
+com.jubiman.customdatalib.player.client
+com.jubiman.customdatalib.player.client.patch
 com.jubiman.customdatalib.player.patch
 com.jubiman.customdatalib.util

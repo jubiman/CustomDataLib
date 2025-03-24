@@ -1,27 +1,26 @@
 package com.jubiman.customdatalib.player;
 
 import com.jubiman.customdatalib.api.*;
-import com.jubiman.customdatalib.client.CustomClientRegistry;
-import com.jubiman.customdatalib.client.CustomClient;
+import com.jubiman.customdatalib.player.client.ClientPlayersHandler;
 import com.jubiman.customdatalib.util.Logger;
 import necesse.engine.GameEventListener;
 import necesse.engine.GameEvents;
 import necesse.engine.events.ServerStartEvent;
 import necesse.engine.events.ServerStopEvent;
+import necesse.engine.gameLoop.tickManager.TickManager;
 import necesse.engine.network.client.Client;
 import necesse.engine.network.server.Server;
 import necesse.engine.network.server.ServerClient;
 import necesse.engine.save.LoadData;
 import necesse.engine.save.SaveData;
+import necesse.entity.mobs.PlayerMob;
 
+import java.awt.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 
 /**
  * Registry where mods can register CustomPlayers
@@ -33,26 +32,9 @@ public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
 	public static final CustomPlayerRegistry INSTANCE = new CustomPlayerRegistry();
 
 	/**
-	 * A HashMap containing all registered CustomPlayers
+	 * A HashMap containing all registered CustromPlayersHandlers
  	 */
-	private static final HashMap<String, Constructor<? extends CustomPlayersHandler<?>>> classHashMap = new HashMap<>();
-
-	static {
-		GameEvents.addListener(ServerStopEvent.class, new GameEventListener<ServerStopEvent>() {
-			@Override
-			public void onEvent(ServerStopEvent e) {
-				INSTANCE.stopAll();
-				Logger.debug("Stopped all CustomPlayersHandler classes");
-			}
-		});
-		GameEvents.addListener(ServerStartEvent.class, new GameEventListener<ServerStartEvent>() {
-			@Override
-			public void onEvent(ServerStartEvent e) {
-				Logger.info("Registering all CustomPlayersHandler classes: " + Arrays.toString(classHashMap.keySet().toArray()));
-				INSTANCE.registerAll();
-			}
-		});
-	}
+	private static final HashMap<String, Constructor<? extends CustomPlayersHandler<?>>> serverCtorMap = new HashMap<>();
 
 	/**
 	 * Register a new CustomPlayersHandler class. Used by individual mods
@@ -64,7 +46,7 @@ public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
 		try {
 			Logger.info("Registering CustomPlayersHandler class: " + identifier);
 			Constructor<? extends CustomPlayersHandler<?>> ctor = clazz.getDeclaredConstructor();
-			classHashMap.put(identifier, ctor);
+			serverCtorMap.put(identifier, ctor);
 		} catch (NoSuchMethodException e) {
 			throw new RuntimeException(e);
 		}
@@ -76,8 +58,8 @@ public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
 	 * @param server the server to tick from
 	 */
 	public static void serverTickAll(Server server) {
-		for (CustomDataHandler<Long, ? extends CustomData> cps : INSTANCE.registry.values()) {
-			((CustomPlayersHandler<? extends CustomPlayer>) cps).serverTick(server);
+		for (CustomDataHandler<Long, ? extends CustomData> customDataHandler : INSTANCE.registry.values()) {
+			((CustomPlayersHandler<? extends CustomPlayer>) customDataHandler).serverTick(server);
 		}
 	}
 
@@ -87,11 +69,12 @@ public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
 	 * @param save           the SaveData to save to
 	 * @param authentication the authentication of the player to save
 	 */
-	public void saveAll(SaveData save, Object authentication) {
+	public void saveAll(SaveData save, long authentication) {
 		SaveData customPlayerSave = new SaveData("CustomPlayerData");
-		for (CustomDataHandler<Long, ? extends CustomData> cps : registry.values()) {
-			Logger.info("Saving data for " + cps.handlerName);
-			cps.save(customPlayerSave, (Long) authentication);
+		Logger.info("Saving data for %d", authentication);
+		for (CustomDataHandler<Long, ? extends CustomData> customDataHandler : registry.values()) {
+			Logger.info("\t - Saving data for %s", customDataHandler.handlerName);
+			customDataHandler.save(customPlayerSave, authentication);
 		}
 		save.addSaveData(customPlayerSave);
 	}
@@ -104,15 +87,16 @@ public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
 	 */
 	public void loadAllEnter(LoadData data, long authentication) {
 		LoadData playerData = data.getFirstLoadDataByName("CustomPlayerData");
+		Logger.info("Loading data for %d", authentication);
 		for (Map.Entry<String, CustomDataHandler<Long, ? extends CustomData>> entry : registry.entrySet()) {
 			// Check if the mod has valid data
 			LoadData modData = playerData.getFirstLoadDataByName(entry.getKey());
 			if (modData == null) {
-				Logger.info("No data found for " + entry.getKey());
+				Logger.info("\t - No data found for " + entry.getKey());
 				continue;
 			}
 			// Load the data
-			Logger.info("Loading data for " + entry.getKey());
+			Logger.info("\t - Loading data for %s", entry.getKey());
 			((CustomPlayersHandler<? extends CustomPlayer>) entry.getValue()).loadEnter(modData, authentication);
 		}
 	}
@@ -125,14 +109,16 @@ public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
 	 */
 	public void loadAllExit(LoadData data, long authentication) {
 		LoadData playerData = data.getFirstLoadDataByName("CustomPlayerData");
+		Logger.info("Loading data for %d", authentication);
 		for (Map.Entry<String, CustomDataHandler<Long, ? extends CustomData>> entry : registry.entrySet()) {
 			// Check if the mod has valid data
 			LoadData modData = playerData.getFirstLoadDataByName(entry.getKey());
 			if (modData == null) {
-				Logger.info("No data found for " + entry.getKey());
+				Logger.info("\t - No data found for " + entry.getKey());
 				continue;
 			}
 			// Load the data
+			Logger.info("\t - Loading data for %s", entry.getKey());
 			Logger.info("Loading data for " + entry.getKey());
 			((CustomPlayersHandler<? extends CustomPlayer>) entry.getValue()).loadExit(modData, authentication);
 		}
@@ -143,7 +129,7 @@ public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
 	 */
 	private void registerAll() {
 		// TODO: call this class some time
-		for (Map.Entry<String, Constructor<? extends CustomPlayersHandler<?>>> entry : classHashMap.entrySet()) {
+		for (Map.Entry<String, Constructor<? extends CustomPlayersHandler<?>>> entry : serverCtorMap.entrySet()) {
 			try {
 				Logger.debug("Instantiating a new object for " + entry.getValue().getDeclaringClass().getName());
 				CustomPlayersHandler<?> instance = entry.getValue().newInstance();
@@ -161,8 +147,8 @@ public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
 	 * Stops all registered CustomPlayers. Please do not call this function as it's called when Necesse's server stops.
 	 */
 	public void stopAll() {
-		for (CustomDataHandler<Long, ? extends CustomData> cps : registry.values())
-			((CustomPlayersHandler<? extends CustomPlayer>) cps).stop();
+		for (CustomDataHandler<Long, ? extends CustomData> customDataHandler : registry.values())
+			customDataHandler.stop();
 	}
 
 	/**
@@ -170,8 +156,8 @@ public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
 	 * @param authentication the authentication of the player to remove
 	 */
 	public void removeUser(long authentication) {
-		for (CustomDataHandler<Long, ? extends CustomData> cps : registry.values())
-			((CustomPlayersHandler<? extends CustomPlayer>) cps).remove(authentication);
+		for (CustomDataHandler<Long, ? extends CustomData> customDataHandler : registry.values())
+			customDataHandler.remove(authentication);
 	}
 
 	/**
@@ -187,6 +173,19 @@ public class CustomPlayerRegistry extends CustomDataRegistry<Long> {
 				serverClient.sendPacket(((Syncable) player).getSyncPacket());
 			}
 		}
+	}
+
+	/**
+	 * Register all event listeners, should not be called by mods
+	 */
+	public void registerListeners() {
+		GameEvents.addListener(ServerStartEvent.class, new GameEventListener<ServerStartEvent>() {
+			@Override
+			public void onEvent(ServerStartEvent e) {
+				Logger.info("Registering all CustomPlayersHandler classes: " + Arrays.toString(serverCtorMap.keySet().toArray()));
+				INSTANCE.registerAll();
+			}
+		});
 	}
 }
 

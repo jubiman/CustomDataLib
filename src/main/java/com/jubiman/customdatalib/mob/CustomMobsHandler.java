@@ -65,7 +65,7 @@ public class CustomMobsHandler<T extends CustomMob> extends CustomDataHandler<In
 	 * When switching worlds or on server stop this will be called to avoid overwriting data in other (older) worlds
 	 */
 	public void stop() {
-		userMap.clear(); // avoid overwriting other worlds
+		dataMap.clear(); // avoid overwriting other worlds
 	}
 
 	/**
@@ -74,7 +74,7 @@ public class CustomMobsHandler<T extends CustomMob> extends CustomDataHandler<In
 	 * @param id the id of the player to remove
 	 */
 	public void remove(int id) {
-		userMap.remove(id);
+		dataMap.remove(id);
 	}
 
 	/**

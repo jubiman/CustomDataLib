@@ -23,7 +23,7 @@ public abstract class CustomDataHandler<I, T extends CustomData> {
 	/**
 	 * The map of all CustomData objects
 	 */
-	protected final HashMap<I, T> userMap = new HashMap<>();
+	protected final HashMap<I, T> dataMap = new HashMap<>();
 
 	/**
 	 * The constructor for the CustomData object, created from the class and parameter types
@@ -53,13 +53,13 @@ public abstract class CustomDataHandler<I, T extends CustomData> {
 	 */
 	public T get(I identifier) {
 		try {
-			if (!userMap.containsKey(identifier))
-				userMap.put(identifier, ctor.newInstance(identifier));
+			if (!dataMap.containsKey(identifier))
+				dataMap.put(identifier, ctor.newInstance(identifier));
 		} catch (InvocationTargetException | InstantiationException |
 				 IllegalAccessException e) { // should only happen when people develop
 			throw new RuntimeException(e);
 		}
-		return userMap.get(identifier);
+		return dataMap.get(identifier);
 	}
 
 	/**
@@ -84,7 +84,7 @@ public abstract class CustomDataHandler<I, T extends CustomData> {
 	 * @return a set of all keys (all player auths )
 	 */
 	public Set<I> keyIterator() {
-		return userMap.keySet();
+		return dataMap.keySet();
 	}
 
 	/**
@@ -93,6 +93,22 @@ public abstract class CustomDataHandler<I, T extends CustomData> {
 	 * @return a collection of all values (all CustomPlayers)
 	 */
 	public Collection<T> values() {
-		return userMap.values();
+		return dataMap.values();
+	}
+
+	/**
+	 * When switching worlds or on server stop this will be called to avoid overwriting data in other (older) worlds
+	 */
+	public void stop() {
+		dataMap.clear(); // avoid overwriting other worlds
+	}
+
+	/**
+	 * Removes a data object from the map
+	 *
+	 * @param key the key of the data to remove
+	 */
+	public void remove(I key) {
+		dataMap.remove(key);
 	}
 }
